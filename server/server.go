@@ -16,25 +16,24 @@ import (
 )
 
 var (
+	srv         microsrv.Server
 	handles     []interface{}
 	subscribers []interface{}
 )
 
-func Handles(srvHandles ...interface{}) {
-	handles = append(handles, srvHandles...)
-}
+func Init(opts ...microsrv.Option) {
+	for _, o := range opts {
+		o(&microsrv.Options{})
+	}
 
-func Subscribers(srvSubscribers ...interface{}) {
-	subscribers = append(subscribers, srvSubscribers...)
-}
-
-func Run(opts ...microsrv.Option) {
 	if err := config.Init(); err != nil {
 		panic(err)
 	}
 
-	if err := db.Init(); err != nil {
-		panic(err)
+	if config.Service.EnableDB {
+		if err := db.Init(); err != nil {
+			panic(err)
+		}
 	}
 
 	regOpts := []registry.Option{
@@ -45,7 +44,7 @@ func Run(opts ...microsrv.Option) {
 		regOpts = append(regOpts, etcd.Auth(config.Env.EtcdUser, config.Env.EtcdPassword))
 	}
 
-	if config.Env.EtcdTls {
+	if config.Env.EtcdTLS {
 		tLSConf, err := utils.GetTLSConfig()
 		if err != nil {
 			panic(err)
@@ -59,8 +58,18 @@ func Run(opts ...microsrv.Option) {
 		microsrv.Registry(etcd.NewRegistry(regOpts...)),
 	}...)
 
-	srv := grpc.NewServer(opts...)
+	srv = grpc.NewServer(opts...)
+}
 
+func Handles(srvHandles ...interface{}) {
+	handles = append(handles, srvHandles...)
+}
+
+func Subscribers(srvSubscribers ...interface{}) {
+	subscribers = append(subscribers, srvSubscribers...)
+}
+
+func Run() {
 	// handles
 	for _, handle := range handles {
 		if err := srv.Handle(srv.NewHandler(handle)); err != nil {

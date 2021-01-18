@@ -13,16 +13,21 @@ import (
 var (
 	path    = []string{"micro", "config"}
 	Env     *envConf
-	Service *service
+	Service = &service{
+		EnableDB: true,
+	}
+)
+
+const (
+	delimiter = "."
 )
 
 type envConf struct {
 	// mode
 	Mode string
-	// service
-	ServiceName string
+
 	// etcd
-	EtcdTls         bool
+	EtcdTLS         bool
 	EtcdAuth        bool
 	EtcdAddress     []string
 	EtcdUser        string
@@ -33,9 +38,11 @@ type envConf struct {
 }
 
 type service struct {
-	SrvName string
-	Name    string
-	Version string
+	SrvName  string
+	Name     string
+	Type     string
+	EnableDB bool
+	Version  string
 }
 
 func Init() error {
@@ -43,16 +50,15 @@ func Init() error {
 	if err != nil {
 		return err
 	}
-	etcdTls, err := env.GetBool(constant.EtcdTls, false)
+	etcdTLS, err := env.GetBool(constant.EtcdTLS, false)
 	if err != nil {
 		return err
 	}
 
 	Env = &envConf{
-		EtcdTls:         etcdTls,
+		EtcdTLS:         etcdTLS,
 		EtcdAuth:        etcdAuth,
 		Mode:            env.GetString(constant.Mode, "prod"),
-		ServiceName:     env.GetString(constant.ServiceName, ""),
 		EtcdUser:        env.GetString(constant.EtcdUser, ""),
 		EtcdPassword:    env.GetString(constant.EtcdPassword, ""),
 		EtcdAddress:     env.GetStrings(constant.EtcdAddress),
@@ -72,11 +78,8 @@ func Init() error {
 		return err
 	}
 
-	Service = &service{
-		Name:    Env.ServiceName,
-		SrvName: "srv." + Env.ServiceName,
-		Version: Get(Env.ServiceName, "version").String("latest"),
-	}
+	Service.SrvName = Service.Type + delimiter + Service.Name
+	Service.Version = Get(Service.Name, "version").String("latest")
 
 	return nil
 }
