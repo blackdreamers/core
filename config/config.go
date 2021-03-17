@@ -1,13 +1,13 @@
 package config
 
 import (
-	"github.com/micro/go-micro/v2/config"
-	"github.com/micro/go-micro/v2/config/reader"
-	"github.com/micro/go-micro/v2/config/source"
-	"github.com/micro/go-micro/v2/config/source/etcd"
-
 	"github.com/blackdreamers/core/constant"
 	"github.com/blackdreamers/core/env"
+
+	"github.com/asim/go-micro/plugins/config/source/etcd/v3"
+	"github.com/asim/go-micro/v3/config"
+	"github.com/asim/go-micro/v3/config/reader"
+	"github.com/asim/go-micro/v3/config/source"
 )
 
 var (

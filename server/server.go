@@ -5,14 +5,14 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/micro/go-micro/v2/registry"
-	"github.com/micro/go-micro/v2/registry/etcd"
-	microsrv "github.com/micro/go-micro/v2/server"
-	"github.com/micro/go-micro/v2/server/grpc"
-
 	"github.com/blackdreamers/core/config"
 	"github.com/blackdreamers/core/db"
 	"github.com/blackdreamers/core/utils"
+
+	"github.com/asim/go-micro/plugins/registry/etcd/v3"
+	"github.com/asim/go-micro/plugins/server/grpc/v3"
+	"github.com/asim/go-micro/v3/registry"
+	microsrv "github.com/asim/go-micro/v3/server"
 )
 
 var (

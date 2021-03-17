@@ -3,7 +3,7 @@ package server
 import (
 	"github.com/blackdreamers/core/config"
 
-	microsrv "github.com/micro/go-micro/v2/server"
+	microsrv "github.com/asim/go-micro/v3/server"
 )
 
 const (
