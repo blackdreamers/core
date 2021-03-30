@@ -7,12 +7,12 @@ import (
 
 	"github.com/blackdreamers/core/config"
 	"github.com/blackdreamers/core/db"
+	log "github.com/blackdreamers/core/logger"
 	"github.com/blackdreamers/core/utils"
-
-	"github.com/asim/go-micro/plugins/registry/etcd/v3"
-	"github.com/asim/go-micro/plugins/server/grpc/v3"
-	"github.com/asim/go-micro/v3/registry"
-	microsrv "github.com/asim/go-micro/v3/server"
+	"github.com/blackdreamers/go-micro/plugins/registry/etcd/v3"
+	"github.com/blackdreamers/go-micro/plugins/server/grpc/v3"
+	"github.com/blackdreamers/go-micro/v3/registry"
+	microsrv "github.com/blackdreamers/go-micro/v3/server"
 )
 
 var (
@@ -30,6 +30,10 @@ func Init(opts ...microsrv.Option) {
 		panic(err)
 	}
 
+	if err := log.Init(); err != nil {
+		panic(err)
+	}
+
 	if config.Service.EnableDB {
 		if err := db.Init(); err != nil {
 			panic(err)
@@ -37,14 +41,14 @@ func Init(opts ...microsrv.Option) {
 	}
 
 	regOpts := []registry.Option{
-		registry.Addrs(config.Env.EtcdAddress...),
+		registry.Addrs(config.Conf.EtcdAddress...),
 	}
 
-	if config.Env.EtcdAuth {
-		regOpts = append(regOpts, etcd.Auth(config.Env.EtcdUser, config.Env.EtcdPassword))
+	if config.Conf.EtcdAuth {
+		regOpts = append(regOpts, etcd.Auth(config.Conf.EtcdUser, config.Conf.EtcdPassword))
 	}
 
-	if config.Env.EtcdTLS {
+	if config.Conf.EtcdTLS {
 		tLSConf, err := utils.GetTLSConfig()
 		if err != nil {
 			panic(err)

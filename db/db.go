@@ -2,17 +2,13 @@ package db
 
 import (
 	"fmt"
-	"os"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 
 	"github.com/blackdreamers/core/config"
 )
-
-const dbConfKey = "database"
 
 var (
 	DB           *gorm.DB
@@ -29,17 +25,15 @@ func Repositories(dbRepositories ...Repository) {
 
 func Init() error {
 	var err error
-	var dbConf map[string]string
-	dbConf = config.Get(dbConfKey).StringMap(dbConf)
 
 	dialect := mysql.New(
 		mysql.Config{
 			DSN: fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?charset=utf8mb4&parseTime=True&loc=Local",
-				dbConf["user"],
-				dbConf["password"],
-				dbConf["host"],
-				dbConf["port"],
-				config.Service.Get("dbname").String(config.Service.Name),
+				config.Conf.DBUser,
+				config.Conf.DBPassword,
+				config.Conf.DBHost,
+				config.Conf.DBPort,
+				config.Service.DBName,
 			),
 			DefaultStringSize: 255, // add default size for string fields, by default, will use db type `longtext` for fields without size, not a primary key, no index defined and don't have default values
 		},
@@ -50,9 +44,7 @@ func Init() error {
 		NamingStrategy: schema.NamingStrategy{
 			SingularTable: true,
 		},
-	}
-	if os.Getenv("MODE") == "debug" {
-		cfg.Logger = logger.Default.LogMode(logger.Info)
+		Logger: newLog(),
 	}
 
 	DB, err = gorm.Open(dialect, cfg)

@@ -1,16 +1,28 @@
 package constant
 
 const (
+	Dev  = "dev"
+	Test = "test"
+	Prod = "prod"
+)
+
+const (
 	Timestamp = "2006-01-02 15:04:05"
 )
 
 const (
-	Delimiter = "."
+	Delimiter   = "."
+	SourceField = "source"
+	ErrKey      = "error"
+	DBConfKey   = "database"
 )
 
-// env
 const (
-	Mode            = "MODE"
+	Env      = "ENV"
+	LogLevel = "LOG_LEVEL"
+)
+
+const (
 	EtcdUser        = "ETCD_USER"
 	EtcdPassword    = "ETCD_PASSWORD"
 	EtcdAddress     = "ETCD_ADDRESS"

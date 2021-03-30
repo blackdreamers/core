@@ -9,12 +9,12 @@ import (
 )
 
 func GetTLSConfig() (*tls.Config, error) {
-	cert, err := tls.LoadX509KeyPair(config.Env.EtcdCertPath, config.Env.EtcdCertKeyPath)
+	cert, err := tls.LoadX509KeyPair(config.Conf.EtcdCertPath, config.Conf.EtcdCertKeyPath)
 	if err != nil {
 		return nil, err
 	}
 
-	ca, err := ioutil.ReadFile(config.Env.EtcdCaPath)
+	ca, err := ioutil.ReadFile(config.Conf.EtcdCaPath)
 	if err != nil {
 		return nil, err
 	}
