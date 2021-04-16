@@ -10,32 +10,36 @@ hotshot new helloworld
 
 ## Example Service
 
+env
+```shell
+ENV=dev
+#ENV=prod
+LOG_LEVEL=debug
+ETCD_ADDRS=localhost:2379
+ETCD_AUTH=false
+ETCD_TLS=false
+ETCD_USER=xxx
+ETCD_PASSWORD=xxx
+ETCD_CA_PATH=xxx
+ETCD_CERT_PATH=xxx
+ETCD_CERT_KEY_PATH=xxx
+```
+
 ```go
 package main
 
 import (
-	coredb "github.com/blackdreamers/core/db"
 	"github.com/blackdreamers/core/server"
+	_ "github.com/blackdreamers/helloworld/db"
+	_ "github.com/blackdreamers/helloworld/handler"
+	_ "github.com/blackdreamers/helloworld/subscriber"
 )
 
 func main() {
-	// DB repositories
-	coredb.Repositories(&db.Example{})
-
 	// Init server
 	server.Init(
-		server.Name("example"),
+		server.Name("helloworld"),
 		server.Type(server.SRV),
-	)
-
-	// Register handles
-	server.Handles(
-		new(handler.Example),
-	)
-
-	// Register subscribers
-	server.Subscribers(
-		new(subscriber.Example),
 	)
 
 	// Run server
