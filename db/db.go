@@ -16,7 +16,7 @@ var (
 )
 
 type Repository interface {
-	FetchById() error
+	FindById() error
 }
 
 func Repositories(dbRepositories ...Repository) {
@@ -29,10 +29,10 @@ func Init() error {
 	dialect := mysql.New(
 		mysql.Config{
 			DSN: fmt.Sprintf("%v:%v@tcp(%v:%v)/%v?charset=utf8mb4&parseTime=True&loc=Local",
-				config.Conf.DBUser,
-				config.Conf.DBPassword,
-				config.Conf.DBHost,
-				config.Conf.DBPort,
+				config.DB.User,
+				config.DB.Password,
+				config.DB.Host,
+				config.DB.Port,
 				config.Service.DBName,
 			),
 			DefaultStringSize: 255, // add default size for string fields, by default, will use db type `longtext` for fields without size, not a primary key, no index defined and don't have default values

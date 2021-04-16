@@ -1,36 +1,37 @@
 package server
 
 import (
-	"os"
-	"os/signal"
-	"syscall"
+	"context"
+	"time"
 
+	"github.com/blackdreamers/core/cache/redis"
+	"github.com/blackdreamers/core/client"
 	"github.com/blackdreamers/core/config"
 	"github.com/blackdreamers/core/db"
-	log "github.com/blackdreamers/core/logger"
+	"github.com/blackdreamers/core/logger"
 	"github.com/blackdreamers/core/utils"
+	cgrpc "github.com/blackdreamers/go-micro/plugins/client/grpc/v3"
 	"github.com/blackdreamers/go-micro/plugins/registry/etcd/v3"
-	"github.com/blackdreamers/go-micro/plugins/server/grpc/v3"
+	sgrpc "github.com/blackdreamers/go-micro/plugins/server/grpc/v3"
+	"github.com/blackdreamers/go-micro/v3"
 	"github.com/blackdreamers/go-micro/v3/registry"
-	microsrv "github.com/blackdreamers/go-micro/v3/server"
 )
 
-var (
-	srv         microsrv.Server
-	handles     []interface{}
-	subscribers []interface{}
-)
+type Server interface {
+	init(opts ...micro.Option) error
+	run() error
+}
 
-func Init(opts ...microsrv.Option) {
+func Init(opts ...micro.Option) {
 	for _, o := range opts {
-		o(&microsrv.Options{})
+		o(&micro.Options{})
 	}
 
 	if err := config.Init(); err != nil {
 		panic(err)
 	}
 
-	if err := log.Init(); err != nil {
+	if err := logger.Init(); err != nil {
 		panic(err)
 	}
 
@@ -40,68 +41,70 @@ func Init(opts ...microsrv.Option) {
 		}
 	}
 
+	if err := redis.Init(); err != nil {
+		panic(err)
+	}
+
 	regOpts := []registry.Option{
-		registry.Addrs(config.Conf.EtcdAddress...),
+		registry.Addrs(config.Etcd.Addrs...),
 	}
 
-	if config.Conf.EtcdAuth {
-		regOpts = append(regOpts, etcd.Auth(config.Conf.EtcdUser, config.Conf.EtcdPassword))
+	if config.Etcd.Auth {
+		regOpts = append(regOpts, etcd.Auth(config.Etcd.User, config.Etcd.Password))
 	}
 
-	if config.Conf.EtcdTLS {
-		tLSConf, err := utils.GetTLSConfig()
+	if config.Etcd.TLS {
+		tLSConf, err := utils.GetTLSConfig(config.Etcd.CaPath, config.Etcd.CertPath, config.Etcd.CertKeyPath)
 		if err != nil {
 			panic(err)
 		}
 		regOpts = append(regOpts, registry.TLSConfig(tLSConf))
 	}
 
-	opts = append(opts, []microsrv.Option{
-		microsrv.Name(config.Service.SrvName),
-		microsrv.Version(config.Service.Version),
-		microsrv.Registry(etcd.NewRegistry(regOpts...)),
-	}...)
+	opts = append(
+		opts,
+		micro.Server(sgrpc.NewServer()),
+		micro.Client(cgrpc.NewClient()),
+		micro.Name(config.Service.SrvName),
+		micro.Version(config.Service.Version),
+		micro.Registry(etcd.NewRegistry(regOpts...)),
+		micro.AfterStart(func() error {
+			client.Init(Client())
+			return nil
+		}),
+		micro.BeforeStop(func() error {
+			return redis.Close()
+		}),
+	)
 
-	srv = grpc.NewServer(opts...)
-}
+	if config.Service.Type == API {
+		opts = append(
+			opts,
+			micro.AfterStart(func() error {
+				return api.run()
+			}),
+			micro.BeforeStop(func() error {
+				ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+				defer cancel()
+				return api.s.Shutdown(ctx)
+			}),
+		)
+	}
 
-func Handles(srvHandles ...interface{}) {
-	handles = append(handles, srvHandles...)
-}
+	if err := srv.init(opts...); err != nil {
+		panic(err)
+	}
 
-func Subscribers(srvSubscribers ...interface{}) {
-	subscribers = append(subscribers, srvSubscribers...)
+	if config.Service.Type == API {
+		if err := api.init(opts...); err != nil {
+			panic(err)
+		}
+	}
+
 }
 
 func Run() {
-	// handles
-	for _, handle := range handles {
-		if err := srv.Handle(srv.NewHandler(handle)); err != nil {
-			panic(err)
-		}
-	}
-
-	// subscribers
-	for _, subscribe := range subscribers {
-		if err := srv.Subscribe(
-			srv.NewSubscriber(
-				config.Service.SrvName,
-				subscribe,
-			),
-		); err != nil {
-			panic(err)
-		}
-	}
-
-	if err := srv.Start(); err != nil {
+	if err := srv.run(); err != nil {
 		panic(err)
 	}
-
-	wait := make(chan os.Signal, 1)
-	signal.Notify(wait, syscall.SIGINT, syscall.SIGTERM)
-	<-wait
-	if err := srv.Stop(); err != nil {
-		panic(err)
-	}
-
 }

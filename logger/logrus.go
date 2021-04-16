@@ -18,18 +18,18 @@ var (
 
 func newLogrus() (logger.Logger, error) {
 	std := logrus.New()
-	std.SetFormatter(&logrus.TextFormatter{
-		ForceColors:     true,
-		FullTimestamp:   true,
+	std.SetFormatter(&logrus.JSONFormatter{
 		TimestampFormat: constant.Timestamp,
 	})
-	if config.Conf.Env == constant.Prod {
-		std.SetFormatter(&logrus.JSONFormatter{
+	if config.IsDevEnv() {
+		std.SetFormatter(&logrus.TextFormatter{
+			ForceColors:     true,
+			FullTimestamp:   true,
 			TimestampFormat: constant.Timestamp,
 		})
 	}
 	std.SetOutput(os.Stdout)
-	level, err := logrus.ParseLevel(config.Conf.LogLevel)
+	level, err := logrus.ParseLevel(config.Log.Level)
 	if err != nil {
 		return nil, err
 	}

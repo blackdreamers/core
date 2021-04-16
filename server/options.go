@@ -2,7 +2,7 @@ package server
 
 import (
 	"github.com/blackdreamers/core/config"
-	microsrv "github.com/blackdreamers/go-micro/v3/server"
+	"github.com/blackdreamers/go-micro/v3"
 )
 
 const (
@@ -10,23 +10,21 @@ const (
 	API = "api"
 )
 
-// Server name
-func Name(n string) microsrv.Option {
-	return func(o *microsrv.Options) {
+func Name(n string) micro.Option {
+	return func(o *micro.Options) {
 		config.Service.Name = n
 	}
 }
 
-// Server type
-func Type(t string) microsrv.Option {
-	return func(o *microsrv.Options) {
+func Type(t string) micro.Option {
+	return func(o *micro.Options) {
 		config.Service.Type = t
 	}
 }
 
-// Whether the server use db, default true
-func EnableDB(b bool) microsrv.Option {
-	return func(o *microsrv.Options) {
+// EnableDB Whether the server use db, default true
+func EnableDB(b bool) micro.Option {
+	return func(o *micro.Options) {
 		config.Service.EnableDB = b
 	}
 }

@@ -4,17 +4,15 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"io/ioutil"
-
-	"github.com/blackdreamers/core/config"
 )
 
-func GetTLSConfig() (*tls.Config, error) {
-	cert, err := tls.LoadX509KeyPair(config.Conf.EtcdCertPath, config.Conf.EtcdCertKeyPath)
+func GetTLSConfig(caPath, certPath, keyPath string) (*tls.Config, error) {
+	cert, err := tls.LoadX509KeyPair(certPath, keyPath)
 	if err != nil {
 		return nil, err
 	}
 
-	ca, err := ioutil.ReadFile(config.Conf.EtcdCaPath)
+	ca, err := ioutil.ReadFile(caPath)
 	if err != nil {
 		return nil, err
 	}
