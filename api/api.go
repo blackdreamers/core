@@ -1,9 +1,7 @@
 package api
 
 import (
-	"fmt"
 	"net/http"
-	"runtime"
 	"strings"
 	"time"
 
@@ -17,9 +15,6 @@ import (
 	et "github.com/go-playground/validator/v10/translations/en"
 	zt "github.com/go-playground/validator/v10/translations/zh"
 	"golang.org/x/text/language"
-
-	"github.com/blackdreamers/core/constant"
-	log "github.com/blackdreamers/go-micro/v3/logger"
 )
 
 var (
@@ -92,15 +87,6 @@ func (a *API) Err(resp *Response, err error) {
 		resp.Err = e
 	} else {
 		resp.HttpStatus = http.StatusInternalServerError
-
-		pc, file, line, ok := runtime.Caller(1)
-		if ok {
-			log.Fields(
-				constant.ErrKey, err,
-				"func", runtime.FuncForPC(pc).Name(),
-				"file", fmt.Sprintf("%v:%v", file, line),
-			).Log(log.ErrorLevel)
-		}
 	}
 }
 

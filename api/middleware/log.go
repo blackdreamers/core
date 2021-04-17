@@ -17,7 +17,7 @@ type Log struct{}
 func (l *Log) Init() ([]gin.HandlerFunc, error) {
 	hostname, err := os.Hostname()
 	if err != nil {
-		hostname = "unknow"
+		hostname = "unknown"
 	}
 
 	return []gin.HandlerFunc{
@@ -38,7 +38,7 @@ func (l *Log) Init() ([]gin.HandlerFunc, error) {
 				dataLength = 0
 			}
 
-			entry := logger.GetLogrus().WithFields(
+			entry := logger.GetEntry(false).WithFields(
 				logrus.Fields{
 					"hostname":    hostname,
 					"code":        statusCode,

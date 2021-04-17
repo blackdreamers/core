@@ -15,6 +15,8 @@ type logConf struct {
 }
 
 func (l *logConf) init() error {
+	// etcd service配置的日志等级权重高于env中配置的
+	l.Level = Service.Get("log_level").String(l.Level)
 	return nil
 }
 

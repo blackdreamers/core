@@ -1,50 +1,99 @@
 package logger
 
 import (
+	"fmt"
 	"os"
+	"runtime"
+	"strings"
 
-	"github.com/sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 
 	"github.com/blackdreamers/core/config"
 	"github.com/blackdreamers/core/constant"
-	log "github.com/blackdreamers/go-micro/plugins/logger/logrus/v3"
+	plslog "github.com/blackdreamers/go-micro/plugins/logger/logrus/v3"
 	"github.com/blackdreamers/go-micro/v3/logger"
 )
 
 var (
-	hooks = make(logrus.LevelHooks)
-	entry *logrus.Entry
+	_logrus = &logrus{hooks: make(log.LevelHooks)}
 )
 
-func newLogrus() (logger.Logger, error) {
-	std := logrus.New()
-	std.SetFormatter(&logrus.JSONFormatter{
-		TimestampFormat: constant.Timestamp,
+type logrus struct {
+	hooks              log.LevelHooks
+	enableCallerEntry  *log.Entry
+	disableCallerEntry *log.Entry
+}
+
+func (l *logrus) init() error {
+	level, err := log.ParseLevel(config.Log.Level)
+	if err != nil {
+		return err
+	}
+
+	enableCallerStd := newLogrus(level, true)
+	disableCallerStd := newLogrus(level, false)
+
+	l.enableCallerEntry = log.NewEntry(enableCallerStd)
+	l.disableCallerEntry = log.NewEntry(disableCallerStd)
+
+	logger.DefaultLogger = plslog.NewLogger(plslog.WithLogger(GetEntry(true)))
+
+	return nil
+}
+
+func GetEntry(reportCaller bool) *log.Entry {
+	if reportCaller {
+		return _logrus.enableCallerEntry
+	}
+	return _logrus.disableCallerEntry
+}
+
+func newLogrus(level log.Level, reportCaller bool) *log.Logger {
+	std := log.New()
+
+	std.SetFormatter(&log.JSONFormatter{
+		CallerPrettyfier: caller(8),
+		TimestampFormat:  constant.Timestamp,
 	})
 	if config.IsDevEnv() {
-		std.SetFormatter(&logrus.TextFormatter{
-			ForceColors:     true,
-			FullTimestamp:   true,
-			TimestampFormat: constant.Timestamp,
+		std.SetFormatter(&log.TextFormatter{
+			ForceColors:      true,
+			FullTimestamp:    true,
+			CallerPrettyfier: caller(9),
+			TimestampFormat:  constant.Timestamp,
 		})
 	}
+
 	std.SetOutput(os.Stdout)
-	level, err := logrus.ParseLevel(config.Log.Level)
-	if err != nil {
-		return nil, err
-	}
 	std.SetLevel(level)
-	std.ReplaceHooks(hooks)
+	std.SetReportCaller(reportCaller)
+	std.ReplaceHooks(_logrus.hooks)
 
-	entry = logrus.NewEntry(std)
-
-	return log.NewLogger(log.WithLogger(entry)), nil
+	return std
 }
 
-func addHook(level logrus.Level, hks ...logrus.Hook) {
-	hooks[level] = hks
+func addHook(level log.Level, hks ...log.Hook) {
+	_logrus.hooks[level] = hks
 }
 
-func GetLogrus() *logrus.Entry {
-	return entry
+func caller(skip int) func(f *runtime.Frame) (string, string) {
+	return func(f *runtime.Frame) (string, string) {
+		_, file, line, ok := runtime.Caller(skip)
+		fileline := "unknown"
+		if ok {
+			filePath := strings.ReplaceAll(file, fmt.Sprintf("%s/pkg/mod/", os.Getenv("GOPATH")), "")
+			// 去除路径中版本号
+			versionIndex := strings.Index(filePath, "@")
+			if versionIndex != -1 {
+				subPath := filePath[versionIndex:]
+				version := subPath[:strings.Index(subPath, "/")]
+				filePath = strings.ReplaceAll(filePath, version, "")
+			}
+			fileline = fmt.Sprintf("%v:%v", filePath, line)
+			if config.IsDevEnv() {
+				fileline += "\t"
+			}
+		}
+		return "", fileline
+	}
 }

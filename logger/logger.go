@@ -1,12 +1,11 @@
 package logger
 
-import (
-	"github.com/blackdreamers/go-micro/v3/logger"
-)
+type Logger interface {
+	init() error
+}
 
 func Init() error {
-	var err error
-	if logger.DefaultLogger, err = newLogrus(); err != nil {
+	if err := _logrus.init(); err != nil {
 		return err
 	}
 	return nil
