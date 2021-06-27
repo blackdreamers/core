@@ -94,6 +94,10 @@ func (a *apiEntry) run() error {
 		Handler: a.r,
 	}
 
+	if log.V(log.InfoLevel, log.DefaultLogger) {
+		log.Infof("HTTP API Listening on %s", config.Service.Addr)
+	}
+
 	if err := a.s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 		return err
 	}

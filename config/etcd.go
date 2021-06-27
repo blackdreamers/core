@@ -21,21 +21,21 @@ type etcdConf struct {
 }
 
 func (e *etcdConf) init() error {
-	var err error
-	e.Auth, err = env.GetBool(constant.EtcdAuth, false)
-	if err != nil {
-		return err
-	}
-	e.TLS, err = env.GetBool(constant.EtcdTLS, false)
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
 func init() {
+	auth, err := env.GetBool(constant.EtcdAuth, false)
+	if err != nil {
+		panic(err)
+	}
+	TLS, err := env.GetBool(constant.EtcdTLS, false)
+	if err != nil {
+		panic(err)
+	}
 	Etcd = &etcdConf{
+		TLS:         TLS,
+		Auth:        auth,
 		User:        env.GetString(constant.EtcdUser, ""),
 		Password:    env.GetString(constant.EtcdPassword, ""),
 		Addrs:       env.GetStrings(constant.EtcdAddrs),

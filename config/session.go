@@ -17,7 +17,7 @@ type sessionConf struct {
 }
 
 func (s *sessionConf) init() error {
-	if err := Get(constant.LimiterConfKey).Scan(s); err != nil {
+	if err := Get(constant.SessionConfKey).Scan(s); err != nil {
 		return err
 	}
 	if s.Store == "" {

@@ -1,6 +1,8 @@
 package config
 
 import (
+	"strings"
+
 	"github.com/blackdreamers/core/constant"
 	"github.com/blackdreamers/core/env"
 	"github.com/blackdreamers/go-micro/v3/logger"
@@ -16,7 +18,7 @@ type logConf struct {
 
 func (l *logConf) init() error {
 	// etcd service配置的日志等级权重高于env中配置的
-	l.Level = Service.Get("log_level").String(l.Level)
+	l.Level = Service.Get(strings.ToLower(constant.LogLevel)).String(l.Level)
 	return nil
 }
 

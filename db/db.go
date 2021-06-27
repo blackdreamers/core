@@ -16,7 +16,11 @@ var (
 )
 
 type Repository interface {
-	FindById() error
+	TableName() string
+	BeforeCreate(db *gorm.DB) error
+	BeforeSave(db *gorm.DB) error
+	AfterCreate(db *gorm.DB) error
+	AfterSave(db *gorm.DB) error
 }
 
 func Repositories(dbRepositories ...Repository) {
@@ -59,4 +63,16 @@ func Init() error {
 	}
 
 	return nil
+}
+
+func IsRecordFound(e error) (found bool, err error) {
+	switch e {
+	case nil:
+		found = true
+	case gorm.ErrRecordNotFound:
+		found = false
+	default:
+		err = e
+	}
+	return
 }
