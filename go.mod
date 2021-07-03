@@ -3,12 +3,12 @@ module github.com/blackdreamers/core
 go 1.16
 
 require (
-	github.com/blackdreamers/go-micro/plugins/client/grpc/v3 v3.0.0-20210327055021-a34405afb89c
-	github.com/blackdreamers/go-micro/plugins/config/source/etcd/v3 v3.0.0-20210327053124-3d3c2b7a6fa2
-	github.com/blackdreamers/go-micro/plugins/logger/logrus/v3 v3.0.0-20210327062615-32425875b001
-	github.com/blackdreamers/go-micro/plugins/registry/etcd/v3 v3.0.0-20210327061138-79eae41a7e43
-	github.com/blackdreamers/go-micro/plugins/server/grpc/v3 v3.0.0-20210327062615-32425875b001
-	github.com/blackdreamers/go-micro/v3 v3.5.1-0.20210518154545-47107f776471
+	github.com/blackdreamers/go-micro/plugins/client/grpc/v3 v3.0.0-20210703052542-87049b6558d4
+	github.com/blackdreamers/go-micro/plugins/config/source/etcd/v3 v3.0.0-20210703052542-87049b6558d4
+	github.com/blackdreamers/go-micro/plugins/logger/logrus/v3 v3.0.0-20210703052542-87049b6558d4
+	github.com/blackdreamers/go-micro/plugins/registry/etcd/v3 v3.0.0-20210703052542-87049b6558d4
+	github.com/blackdreamers/go-micro/plugins/server/grpc/v3 v3.0.0-20210703052542-87049b6558d4
+	github.com/blackdreamers/go-micro/v3 v3.5.2-0.20210703052542-87049b6558d4
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-contrib/pprof v1.3.0
 	github.com/gin-contrib/sessions v0.0.3
@@ -18,7 +18,6 @@ require (
 	github.com/go-playground/validator/v10 v10.5.0
 	github.com/go-redis/redis/v8 v8.8.0
 	github.com/jinzhu/copier v0.3.2
-	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/sirupsen/logrus v1.8.1
 	github.com/ulule/limiter/v3 v3.8.0
 	golang.org/x/text v0.3.6
