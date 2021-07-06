@@ -13,6 +13,10 @@ import (
 	"github.com/blackdreamers/core/constant"
 )
 
+const (
+	SessionName = "session"
+)
+
 type Session struct{}
 
 func (s *Session) Init() ([]gin.HandlerFunc, error) {
@@ -45,9 +49,10 @@ func (s *Session) Init() ([]gin.HandlerFunc, error) {
 		Path:     "/",
 	})
 
-	return []gin.HandlerFunc{sessions.Sessions("session", sessionStore)}, nil
+	return []gin.HandlerFunc{sessions.Sessions(SessionName, sessionStore)}, nil
 }
 
 func init() {
 	Middlewares(&Session{})
+	Middlewares(&Authorizer{})
 }
