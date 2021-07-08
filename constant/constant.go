@@ -27,6 +27,11 @@ const (
 const (
 	Env      = "ENV"
 	LogLevel = "LOG_LEVEL"
+	Registry = "MICRO_REGISTRY"
+)
+
+const (
+	Etcd = "etcd"
 )
 
 const (

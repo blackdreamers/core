@@ -13,9 +13,10 @@ import (
 )
 
 var (
-	path    = []string{"daydream", "config"}
-	Env     string
-	configs []conf
+	path     = []string{"daydream", "config"}
+	Env      string
+	Registry string
+	configs  []conf
 )
 
 type conf interface {
@@ -24,6 +25,7 @@ type conf interface {
 
 func init() {
 	Env = env.GetString(constant.Env, constant.Prod)
+	Registry = env.GetString(constant.Registry, "")
 }
 
 func Init() error {

@@ -7,6 +7,7 @@ import (
 	"github.com/blackdreamers/core/cache/redis"
 	"github.com/blackdreamers/core/client"
 	"github.com/blackdreamers/core/config"
+	"github.com/blackdreamers/core/constant"
 	"github.com/blackdreamers/core/db"
 	"github.com/blackdreamers/core/logger"
 	"github.com/blackdreamers/core/utils"
@@ -49,25 +50,12 @@ func Init(opts ...micro.Option) {
 		registry.Addrs(config.Etcd.Addrs...),
 	}
 
-	if config.Etcd.Auth {
-		regOpts = append(regOpts, etcd.Auth(config.Etcd.User, config.Etcd.Password))
-	}
-
-	if config.Etcd.TLS {
-		tLSConf, err := utils.GetTLSConfig(config.Etcd.CaPath, config.Etcd.CertPath, config.Etcd.CertKeyPath)
-		if err != nil {
-			panic(err)
-		}
-		regOpts = append(regOpts, registry.TLSConfig(tLSConf))
-	}
-
 	opts = append(
 		opts,
 		micro.Server(sgrpc.NewServer()),
 		micro.Client(cgrpc.NewClient()),
 		micro.Name(config.Service.SrvName),
 		micro.Version(config.Service.Version),
-		micro.Registry(etcd.NewRegistry(regOpts...)),
 		micro.AfterStart(func() error {
 			client.Init(Client())
 			return nil
@@ -76,6 +64,22 @@ func Init(opts ...micro.Option) {
 			return redis.Close()
 		}),
 	)
+
+	if config.Registry == "" || config.Registry == constant.Etcd {
+		if config.Etcd.Auth {
+			regOpts = append(regOpts, etcd.Auth(config.Etcd.User, config.Etcd.Password))
+		}
+
+		if config.Etcd.TLS {
+			tLSConf, err := utils.GetTLSConfig(config.Etcd.CaPath, config.Etcd.CertPath, config.Etcd.CertKeyPath)
+			if err != nil {
+				panic(err)
+			}
+			regOpts = append(regOpts, registry.TLSConfig(tLSConf))
+		}
+
+		opts = append(opts, micro.Registry(etcd.NewRegistry(regOpts...)))
+	}
 
 	if config.Service.Type == API {
 		opts = append(
