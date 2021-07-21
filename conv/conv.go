@@ -129,19 +129,6 @@ func ParseInts(s []string) ([]int, error) {
 	return nums, nil
 }
 
-// Deprecated, Please use ParseInt8s
-func ParseInts8(s []string) ([]int8, error) {
-	nums := make([]int8, 0, len(s))
-	for _, a := range s {
-		n, err := ParseInt8(a)
-		if err != nil {
-			return nil, err
-		}
-		nums = append(nums, n)
-	}
-	return nums, nil
-}
-
 func ParseInt8s(s []string) ([]int8, error) {
 	nums := make([]int8, 0, len(s))
 	for _, a := range s {
@@ -166,36 +153,10 @@ func ParseInt16s(s []string) ([]int16, error) {
 	return nums, nil
 }
 
-// Deprecated, Please use ParseInt32s
-func ParseInts32(s []string) ([]int32, error) {
-	nums := make([]int32, 0, len(s))
-	for _, a := range s {
-		n, err := ParseInt32(a)
-		if err != nil {
-			return nil, err
-		}
-		nums = append(nums, n)
-	}
-	return nums, nil
-}
-
 func ParseInt32s(s []string) ([]int32, error) {
 	nums := make([]int32, 0, len(s))
 	for _, a := range s {
 		n, err := ParseInt32(a)
-		if err != nil {
-			return nil, err
-		}
-		nums = append(nums, n)
-	}
-	return nums, nil
-}
-
-// Deprecated, Please use ParseInt64s
-func ParseInts64(s []string) ([]int64, error) {
-	nums := make([]int64, 0, len(s))
-	for _, a := range s {
-		n, err := ParseInt64(a)
 		if err != nil {
 			return nil, err
 		}
@@ -216,36 +177,10 @@ func ParseInt64s(s []string) ([]int64, error) {
 	return nums, nil
 }
 
-// Deprecated, Please use ParseFloat32s
-func ParseFloats32(s []string) ([]float32, error) {
-	nums := make([]float32, 0, len(s))
-	for _, a := range s {
-		n, err := ParseFloat32(a)
-		if err != nil {
-			return nil, err
-		}
-		nums = append(nums, n)
-	}
-	return nums, nil
-}
-
 func ParseFloat32s(s []string) ([]float32, error) {
 	nums := make([]float32, 0, len(s))
 	for _, a := range s {
 		n, err := ParseFloat32(a)
-		if err != nil {
-			return nil, err
-		}
-		nums = append(nums, n)
-	}
-	return nums, nil
-}
-
-// Deprecated, Please use ParseFloat64s
-func ParseFloats64(s []string) ([]float64, error) {
-	nums := make([]float64, 0, len(s))
-	for _, a := range s {
-		n, err := ParseFloat64(a)
 		if err != nil {
 			return nil, err
 		}

@@ -1,0 +1,106 @@
+package broker
+
+import (
+	"encoding/json"
+
+	"github.com/blackdreamers/core/config"
+	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/go-micro/v3/broker"
+	log "github.com/blackdreamers/go-micro/v3/logger"
+)
+
+var (
+	subscribers []Sub
+	nsq         broker.Broker
+)
+
+type Sub struct {
+	Topic   string
+	Handler broker.Handler
+	Opts    []broker.SubscribeOption
+}
+
+type Header map[string]string
+
+type Body map[string]interface{}
+
+func Init(b broker.Broker) error {
+	nsq = b
+
+	if err := b.Init(broker.Addrs(config.Broker.Addrs...)); err != nil {
+		return err
+	}
+
+	if err := b.Connect(); err != nil {
+		return err
+	}
+
+	for _, sub := range subscribers {
+		_, err := sub.subscribe()
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func EmptyHeader() Header {
+	return Header{}
+}
+
+func NewBody(keysAndValues ...interface{}) Body {
+	body := make(Body)
+
+	if len(keysAndValues) == 0 {
+		return body
+	}
+
+	for i := 0; i < len(keysAndValues); {
+		key := keysAndValues[i]
+		if keyStr, ok := key.(string); ok {
+			if i+1 < len(keysAndValues) {
+				body[keyStr] = keysAndValues[i+1]
+			} else {
+				body[keyStr] = ""
+			}
+		}
+		i += 2
+	}
+
+	return body
+}
+
+func Publish(topic string, header Header, body Body, opts ...broker.PublishOption) error {
+	bodyJson, err := json.Marshal(&body)
+	if err != nil {
+		return err
+	}
+
+	msg := &broker.Message{
+		Header: header,
+		Body:   bodyJson,
+	}
+
+	if err = nsq.Publish(topic, msg, opts...); err != nil {
+		log.Fields("header", header, "body", string(msg.Body), constant.ErrKey, err).Log(log.ErrorLevel, "broker push")
+		return err
+	}
+
+	log.Fields("header", header, "body", string(msg.Body)).Log(log.InfoLevel, "broker push")
+
+	return nil
+}
+
+func Subscribers(subs ...Sub) {
+	subscribers = append(subscribers, subs...)
+}
+
+func Broker() broker.Broker {
+	return nsq
+}
+
+func (s *Sub) subscribe() (broker.Subscriber, error) {
+	s.Opts = append(s.Opts, broker.DisableAutoAck())
+	return nsq.Subscribe(s.Topic, s.Handler, s.Opts...)
+}

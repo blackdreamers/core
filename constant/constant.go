@@ -22,12 +22,14 @@ const (
 	RedisConfKey   = "redis"
 	LimiterConfKey = "limiter"
 	SessionConfKey = "session"
+	BrokerConfKey  = "broker"
 )
 
 const (
-	Env      = "ENV"
-	LogLevel = "LOG_LEVEL"
-	Registry = "MICRO_REGISTRY"
+	Env         = "ENV"
+	LogLevel    = "LOG_LEVEL"
+	Registry    = "MICRO_REGISTRY"
+	BrokerAddrs = "BROKER_ADDRS"
 )
 
 const (

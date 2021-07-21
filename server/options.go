@@ -28,3 +28,10 @@ func EnableDB(b bool) micro.Option {
 		config.Service.EnableDB = b
 	}
 }
+
+// EnableBroker Whether the server use broker, default true
+func EnableBroker(b bool) micro.Option {
+	return func(o *micro.Options) {
+		config.Service.EnableBroker = b
+	}
+}

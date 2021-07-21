@@ -5,7 +5,10 @@ import (
 )
 
 var (
-	Service = &service{EnableDB: true}
+	Service = &service{
+		EnableDB:     true,
+		EnableBroker: true,
+	}
 )
 
 type service struct {
@@ -14,6 +17,7 @@ type service struct {
 	Type         string
 	Version      string
 	EnableDB     bool
+	EnableBroker bool
 	DBName       string
 	Addr         string
 	AllowOrigins []string

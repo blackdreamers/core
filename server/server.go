@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/blackdreamers/core/broker"
 	"github.com/blackdreamers/core/cache/redis"
 	"github.com/blackdreamers/core/client"
 	"github.com/blackdreamers/core/config"
@@ -11,6 +12,7 @@ import (
 	"github.com/blackdreamers/core/db"
 	"github.com/blackdreamers/core/logger"
 	"github.com/blackdreamers/core/utils"
+	"github.com/blackdreamers/go-micro/plugins/broker/nsq/v3"
 	cgrpc "github.com/blackdreamers/go-micro/plugins/client/grpc/v3"
 	"github.com/blackdreamers/go-micro/plugins/registry/etcd/v3"
 	sgrpc "github.com/blackdreamers/go-micro/plugins/server/grpc/v3"
@@ -56,14 +58,25 @@ func Init(opts ...micro.Option) {
 		micro.Client(cgrpc.NewClient()),
 		micro.Name(config.Service.SrvName),
 		micro.Version(config.Service.Version),
+		micro.Broker(nsq.NewBroker()),
+		micro.AfterStart(func() error {
+			client.Init(Client())
+			return nil
+		}),
 		micro.AfterStart(func() error {
 			client.Init(Client())
 			return nil
 		}),
 		micro.BeforeStop(func() error {
-			return redis.Close()
+			return broker.Broker().Disconnect()
 		}),
 	)
+
+	if config.Service.EnableBroker {
+		opts = append(opts, micro.AfterStart(func() error {
+			return broker.Init(srv.srv.Options().Broker)
+		}))
+	}
 
 	if config.Registry == "" || config.Registry == constant.Etcd {
 		if config.Etcd.Auth {
