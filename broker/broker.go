@@ -5,12 +5,14 @@ import (
 
 	"github.com/blackdreamers/core/config"
 	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/retry"
 	"github.com/blackdreamers/go-micro/v3/broker"
 	log "github.com/blackdreamers/go-micro/v3/logger"
 )
 
 var (
-	subscribers []Sub
+	subs        []Sub
+	subscribers []broker.Subscriber
 	nsq         broker.Broker
 )
 
@@ -19,6 +21,12 @@ type Sub struct {
 	Handler broker.Handler
 	Opts    []broker.SubscribeOption
 }
+
+type (
+	Event           = broker.Event
+	SubscribeOption = broker.SubscribeOption
+	PublishOption   = broker.PublishOption
+)
 
 type Header map[string]string
 
@@ -35,11 +43,12 @@ func Init(b broker.Broker) error {
 		return err
 	}
 
-	for _, sub := range subscribers {
-		_, err := sub.subscribe()
+	for _, sub := range subs {
+		sb, err := sub.subscribe()
 		if err != nil {
 			return err
 		}
+		subscribers = append(subscribers, sb)
 	}
 
 	return nil
@@ -71,6 +80,17 @@ func NewBody(keysAndValues ...interface{}) Body {
 	return body
 }
 
+func SameQueueName() broker.SubscribeOption {
+	return broker.Queue(config.Service.SrvName)
+}
+
+func DefaultSubOptions() []broker.SubscribeOption {
+	return []broker.SubscribeOption{
+		broker.DisableAutoAck(),
+		SameQueueName(),
+	}
+}
+
 func Publish(topic string, header Header, body Body, opts ...broker.PublishOption) error {
 	bodyJson, err := json.Marshal(&body)
 	if err != nil {
@@ -82,7 +102,15 @@ func Publish(topic string, header Header, body Body, opts ...broker.PublishOptio
 		Body:   bodyJson,
 	}
 
-	if err = nsq.Publish(topic, msg, opts...); err != nil {
+	err = retry.DefaultRetry.Do(
+		func() error {
+			return nsq.Publish(topic, msg, opts...)
+		},
+		retry.OnRetry(func(n uint, err error) {
+			log.Field("times", n+1).Log(log.InfoLevel, "retry broker push")
+		}),
+	)
+	if err != nil {
 		log.Fields("header", header, "body", string(msg.Body), constant.ErrKey, err).Log(log.ErrorLevel, "broker push")
 		return err
 	}
@@ -92,8 +120,12 @@ func Publish(topic string, header Header, body Body, opts ...broker.PublishOptio
 	return nil
 }
 
-func Subscribers(subs ...Sub) {
-	subscribers = append(subscribers, subs...)
+func Subscribers(sbs ...Sub) {
+	subs = append(subs, sbs...)
+}
+
+func GetSubs() []broker.Subscriber {
+	return subscribers
 }
 
 func Broker() broker.Broker {
@@ -101,6 +133,5 @@ func Broker() broker.Broker {
 }
 
 func (s *Sub) subscribe() (broker.Subscriber, error) {
-	s.Opts = append(s.Opts, broker.DisableAutoAck())
 	return nsq.Subscribe(s.Topic, s.Handler, s.Opts...)
 }

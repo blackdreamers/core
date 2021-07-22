@@ -3,7 +3,8 @@ module github.com/blackdreamers/core
 go 1.16
 
 require (
-	github.com/blackdreamers/go-micro/plugins/broker/nsq/v3 v3.0.0-20210712133117-552daef60be0
+	github.com/avast/retry-go v2.7.0+incompatible
+	github.com/blackdreamers/go-micro/plugins/broker/nsq/v3 v3.0.0-20210722153322-16a55ca316bb
 	github.com/blackdreamers/go-micro/plugins/client/grpc/v3 v3.0.0-20210703052542-87049b6558d4
 	github.com/blackdreamers/go-micro/plugins/config/source/etcd/v3 v3.0.0-20210703052542-87049b6558d4
 	github.com/blackdreamers/go-micro/plugins/logger/logrus/v3 v3.0.0-20210703052542-87049b6558d4

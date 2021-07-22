@@ -73,6 +73,8 @@ github.com/armon/go-metrics v0.0.0-20180917152333-f0300d1749da/go.mod h1:Q73ZrmV
 github.com/armon/go-radix v0.0.0-20180808171621-7fddfc383310/go.mod h1:ufUuZ+zHj4x4TnLV4JWEpy2hxWSpsRywHrMgIH9cCH8=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5 h1:0CwZNZbxp69SHPdPJAN/hZIm0C4OItdklCFmMRWYpio=
 github.com/armon/go-socks5 v0.0.0-20160902184237-e75332964ef5/go.mod h1:wHh0iHkYZB8zMSxRWpUBQtwG5a7fFgvEO+odwuTv2gs=
+github.com/avast/retry-go v2.7.0+incompatible h1:XaGnzl7gESAideSjr+I8Hki/JBi+Yb9baHlMRPeSC84=
+github.com/avast/retry-go v2.7.0+incompatible/go.mod h1:XtSnn+n/sHqQIpZ10K1qAevBhOOCWBLXXy3hyiqqBrY=
 github.com/aws/aws-sdk-go v1.37.27/go.mod h1:hcU610XS61/+aQV88ixoOzUoG7v3b31pl2zKMmprdro=
 github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973/go.mod h1:Dwedo/Wpr24TaqPxmxbtue+5NUziq4I4S80YR8gNf3Q=
 github.com/beorn7/perks v1.0.0/go.mod h1:KWe93zE9D1o94FZ5RNwFwVgaQK1VOXiVxmqh+CedLV8=
@@ -85,6 +87,8 @@ github.com/blackdreamers/go-micro/plugins/broker/memory/v3 v3.0.0-20210703051922
 github.com/blackdreamers/go-micro/plugins/broker/memory/v3 v3.0.0-20210703051922-e8656cfa776d/go.mod h1:XtSmGXleGfJACIMEE9FE27gvXzPg+776HNLRrK0+jrI=
 github.com/blackdreamers/go-micro/plugins/broker/nsq/v3 v3.0.0-20210712133117-552daef60be0 h1:RX5S6JSihvTtdqcD6G8KnaO/GnPtuCCaKDVjB8aUdzM=
 github.com/blackdreamers/go-micro/plugins/broker/nsq/v3 v3.0.0-20210712133117-552daef60be0/go.mod h1:MRzg9c55nKX0AfsnnU6SU0pFpX8i7da2ocnEIxGWUJw=
+github.com/blackdreamers/go-micro/plugins/broker/nsq/v3 v3.0.0-20210722153322-16a55ca316bb h1:laVwOs7HajpJEXJGKqcC8PNWHOcKwth5An/z699GlB0=
+github.com/blackdreamers/go-micro/plugins/broker/nsq/v3 v3.0.0-20210722153322-16a55ca316bb/go.mod h1:MRzg9c55nKX0AfsnnU6SU0pFpX8i7da2ocnEIxGWUJw=
 github.com/blackdreamers/go-micro/plugins/client/grpc/v3 v3.0.0-20210703051922-e8656cfa776d/go.mod h1:4FqYUcHpsR7Ky7dflbNRRjfaEau7+9mpWHd9S/SQzys=
 github.com/blackdreamers/go-micro/plugins/client/grpc/v3 v3.0.0-20210703052542-87049b6558d4 h1:VTZjSzz3XC9doHlmwWPvU/DHInjtrN+eV0RvByepzYE=
 github.com/blackdreamers/go-micro/plugins/client/grpc/v3 v3.0.0-20210703052542-87049b6558d4/go.mod h1:4FqYUcHpsR7Ky7dflbNRRjfaEau7+9mpWHd9S/SQzys=
@@ -101,8 +105,6 @@ github.com/blackdreamers/go-micro/plugins/server/grpc/v3 v3.0.0-20210703052542-8
 github.com/blackdreamers/go-micro/plugins/transport/grpc/v3 v3.0.0-20210703051922-e8656cfa776d h1:0SdlE3yKEvujX3agE74nTIN1ub8htSc5O3a+HePL4u8=
 github.com/blackdreamers/go-micro/plugins/transport/grpc/v3 v3.0.0-20210703051922-e8656cfa776d/go.mod h1:ztO0GDWOyozPDJ4GbdhcP3o2y9ZFxEjxsF50Evvx2uY=
 github.com/blackdreamers/go-micro/v3 v3.5.2-0.20210702144234-4d243e509e39/go.mod h1:vpIRx9rLRNII5w5/a4OWq49f4KgSNO4NxW6rerYwQKY=
-github.com/blackdreamers/go-micro/v3 v3.5.2-0.20210712133117-552daef60be0 h1:FNL6UYi96PxgZesmdUDDeRyraNtYridoqlJnrsGQ2bY=
-github.com/blackdreamers/go-micro/v3 v3.5.2-0.20210712133117-552daef60be0/go.mod h1:vpIRx9rLRNII5w5/a4OWq49f4KgSNO4NxW6rerYwQKY=
 github.com/blackdreamers/go-micro/v3 v3.5.2-0.20210721121153-f6058f417fc3 h1:valQjQu3gn4VC0At6UkB7W8OTOmP/9s3aYV7berWtAc=
 github.com/blackdreamers/go-micro/v3 v3.5.2-0.20210721121153-f6058f417fc3/go.mod h1:vpIRx9rLRNII5w5/a4OWq49f4KgSNO4NxW6rerYwQKY=
 github.com/bmizerany/assert v0.0.0-20160611221934-b7ed37b82869 h1:DDGfHa7BWjL4YnC6+E63dPcxHo2sUxDIu8g3QgEJdRY=
