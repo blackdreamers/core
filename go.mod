@@ -21,6 +21,7 @@ require (
 	github.com/go-redis/redis/v8 v8.8.0
 	github.com/jinzhu/copier v0.3.2
 	github.com/patrickmn/go-cache v2.1.0+incompatible
+	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.8.1
 	github.com/ulule/limiter/v3 v3.8.0
 	golang.org/x/text v0.3.6

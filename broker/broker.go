@@ -120,11 +120,11 @@ func Publish(topic string, header Header, body Body, opts ...broker.PublishOptio
 	return nil
 }
 
-func Subscribers(sbs ...Sub) {
+func AddSubscribers(sbs ...Sub) {
 	subs = append(subs, sbs...)
 }
 
-func GetSubs() []broker.Subscriber {
+func Subscribers() []broker.Subscriber {
 	return subscribers
 }
 

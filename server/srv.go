@@ -15,8 +15,8 @@ type server struct {
 	handles []interface{}
 }
 
-// Handles run before service starts
-func Handles(srvHandles ...interface{}) {
+// AddHandles run before service starts
+func AddHandles(srvHandles ...interface{}) {
 	srv.handles = append(srv.handles, srvHandles...)
 }
 

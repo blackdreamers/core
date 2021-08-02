@@ -17,5 +17,5 @@ func (c *Cors) Init() ([]gin.HandlerFunc, error) {
 }
 
 func init() {
-	Middlewares(&Cors{})
+	AddMiddlewares(&Cors{})
 }

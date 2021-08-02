@@ -23,7 +23,7 @@ type Repository interface {
 	AfterSave(db *gorm.DB) error
 }
 
-func Repositories(dbRepositories ...Repository) {
+func AddRepositories(dbRepositories ...Repository) {
 	repositories = append(repositories, dbRepositories...)
 }
 

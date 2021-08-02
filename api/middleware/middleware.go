@@ -10,6 +10,6 @@ type Middleware interface {
 	Init() ([]gin.HandlerFunc, error)
 }
 
-func Middlewares(ms ...Middleware) {
+func AddMiddlewares(ms ...Middleware) {
 	Ms = append(Ms, ms...)
 }

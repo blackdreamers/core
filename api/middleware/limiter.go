@@ -76,5 +76,5 @@ func (l *Limiter) Init() ([]gin.HandlerFunc, error) {
 }
 
 func init() {
-	Middlewares(&Limiter{})
+	AddMiddlewares(&Limiter{})
 }

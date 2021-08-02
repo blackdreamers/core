@@ -13,7 +13,7 @@ type Client interface {
 	Init(client microcli.Client)
 }
 
-func Clients(clis ...Client) {
+func AddClients(clis ...Client) {
 	clients = append(clients, clis...)
 }
 

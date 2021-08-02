@@ -32,7 +32,7 @@ type Router interface {
 	Router(r *gin.Engine)
 }
 
-func Routers(apiRouters ...Router) {
+func AddRouters(apiRouters ...Router) {
 	api.routers = append(api.routers, apiRouters...)
 }
 

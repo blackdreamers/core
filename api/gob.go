@@ -2,7 +2,7 @@ package api
 
 import "encoding/gob"
 
-func GobModels(models ...interface{}) {
+func AddGobModels(models ...interface{}) {
 	for _, m := range models {
 		gob.Register(m)
 	}

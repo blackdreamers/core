@@ -9,6 +9,7 @@ import (
 	"github.com/blackdreamers/core/client"
 	"github.com/blackdreamers/core/config"
 	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/cron"
 	"github.com/blackdreamers/core/db"
 	"github.com/blackdreamers/core/logger"
 	"github.com/blackdreamers/core/utils"
@@ -64,11 +65,14 @@ func Init(opts ...micro.Option) {
 			return nil
 		}),
 		micro.AfterStart(func() error {
-			client.Init(Client())
-			return nil
+			return cron.Init()
 		}),
 		micro.BeforeStop(func() error {
 			return broker.Broker().Disconnect()
+		}),
+		micro.BeforeStop(func() error {
+			cron.Stop()
+			return nil
 		}),
 	)
 

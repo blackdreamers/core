@@ -9,7 +9,7 @@ import (
 	log "github.com/sirupsen/logrus"
 
 	"github.com/blackdreamers/core/config"
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/constant/timef"
 	plslog "github.com/blackdreamers/go-micro/plugins/logger/logrus/v3"
 	"github.com/blackdreamers/go-micro/v3/logger"
 )
@@ -53,14 +53,14 @@ func newLogrus(level log.Level, reportCaller bool) *log.Logger {
 
 	std.SetFormatter(&log.JSONFormatter{
 		CallerPrettyfier: caller(8),
-		TimestampFormat:  constant.Timestamp,
+		TimestampFormat:  timef.YearMonthDayHourMinuteSecond,
 	})
 	if config.IsDevEnv() {
 		std.SetFormatter(&log.TextFormatter{
 			ForceColors:      true,
 			FullTimestamp:    true,
 			CallerPrettyfier: caller(9),
-			TimestampFormat:  constant.Timestamp,
+			TimestampFormat:  timef.YearMonthDayHourMinuteSecond,
 		})
 	}
 
