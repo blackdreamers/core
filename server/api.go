@@ -75,8 +75,8 @@ func (a *apiEntry) init(opts ...micro.Option) error {
 }
 
 func (a *apiEntry) run() error {
-	for _, m := range middleware.Ms {
-		ms, err := m.Init()
+	for _, m := range middleware.Entries() {
+		ms, err := m.Middleware().Init()
 		if err != nil {
 			return err
 		}
@@ -114,7 +114,7 @@ func logFormatter(param gin.LogFormatterParams) string {
 
 	if param.Latency > time.Minute {
 		// Truncate in a golang < 1.8 safe way
-		param.Latency = param.Latency - param.Latency%time.Second
+		param.Latency -= param.Latency % time.Second
 	}
 
 	var bodyStr string

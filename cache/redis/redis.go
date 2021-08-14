@@ -10,6 +10,10 @@ import (
 	"github.com/blackdreamers/core/constant"
 )
 
+const (
+	Nil = redis.Nil
+)
+
 var (
 	r *Redis
 )

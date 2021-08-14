@@ -1,15 +1,46 @@
 package middleware
 
-import "github.com/gin-gonic/gin"
+import (
+	"sort"
+
+	"github.com/gin-gonic/gin"
+)
 
 var (
-	Ms []Middleware
+	entries []Entry
 )
 
 type Middleware interface {
 	Init() ([]gin.HandlerFunc, error)
 }
 
-func AddMiddlewares(ms ...Middleware) {
-	Ms = append(Ms, ms...)
+type Entry struct {
+	m     Middleware
+	order int
+}
+
+func (e *Entry) Middleware() Middleware {
+	return e.m
+}
+
+func (e *Entry) Order() int {
+	return e.order
+}
+
+func AddMiddlewares(es ...Entry) {
+	entries = append(entries, es...)
+}
+
+func NewEntry(m Middleware, order int) Entry {
+	return Entry{
+		m:     m,
+		order: order,
+	}
+}
+
+func Entries() []Entry {
+	sort.Slice(entries, func(i, j int) bool {
+		return entries[i].order < entries[j].order
+	})
+	return entries
 }

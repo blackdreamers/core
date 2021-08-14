@@ -1,51 +1,49 @@
 package middleware
 
 import (
-	"encoding/gob"
 	"net/http"
-	"strings"
 	"time"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 
+	"github.com/blackdreamers/core/api/auth"
+	"github.com/blackdreamers/core/api/auth/client"
+	"github.com/blackdreamers/core/config"
+	"github.com/blackdreamers/core/conv"
 	log "github.com/blackdreamers/go-micro/v3/logger"
+	authproto "github.com/blackdreamers/platform/proto/auth"
 )
 
 const (
-	UserAuthKey = "user_auth"
-	// Anonymous no session
-	Anonymous = "anonymous"
-	// Unemployed expired session
-	Unemployed = "unemployed"
+	// Masked session invalid
+	Masked = "masked"
+	// Guest no session
+	Guest = "guest"
 )
 
 type Authorizer struct{}
 
-type UserAuth struct {
-	State bool `json:"state"`
-}
-
 func (a *Authorizer) Init() ([]gin.HandlerFunc, error) {
-	auth := &BasicAuthorizer{}
+	b := &BasicAuthorizer{}
 	return []gin.HandlerFunc{
 		func(c *gin.Context) {
-			// temp
-			if strings.Contains(c.Request.URL.Path, "login") ||
-				(strings.Contains(c.Request.Method, "POST") &&
-					strings.EqualFold(c.Request.URL.Path, "/admins")) {
+			id, _, role := b.GetUser(c)
+			allow, err := b.CheckPermission(c.Request, id)
+			if err != nil {
+				log.Error(err)
+				b.TryAgainLater(c)
 				return
 			}
 
-			role, state := auth.GetUser(c)
-			if !state || !auth.CheckPermission(c, role) {
+			if !allow {
 				switch role {
-				case Anonymous:
-					auth.RequireLogIn(c)
-				case Unemployed:
-					auth.RequireReLogIn(c)
+				case Guest:
+					b.RequireLogIn(c)
+				case Masked:
+					b.RequireReLogIn(c)
 				default:
-					auth.RequirePermission(c)
+					b.RequirePermission(c)
 				}
 			}
 		},
@@ -54,13 +52,13 @@ func (a *Authorizer) Init() ([]gin.HandlerFunc, error) {
 
 type BasicAuthorizer struct{}
 
-func (a *BasicAuthorizer) GetUser(c *gin.Context) (role string, state bool) {
+func (a *BasicAuthorizer) GetUser(c *gin.Context) (id int64, state bool, role string) {
 	if _, err := c.Cookie(SessionName); err != nil {
-		return Anonymous, false
+		return 0, true, Guest
 	}
 
 	session := sessions.Default(c)
-	user := session.Get(UserAuthKey)
+	user := session.Get(auth.TokenKey)
 	if user != nil {
 		// rest ttl
 		session.Set(SessionName, user)
@@ -68,17 +66,29 @@ func (a *BasicAuthorizer) GetUser(c *gin.Context) (role string, state bool) {
 			log.Error(err)
 		}
 
-		if !user.(*UserAuth).State {
-			return "", false
-		}
-
-		return "", true
+		u := user.(*auth.User)
+		return u.ID, u.State, ""
 	}
-	return Unemployed, false
+
+	return 0, true, Masked
 }
 
-func (a *BasicAuthorizer) CheckPermission(c *gin.Context, role string) bool {
-	return true
+func (a *BasicAuthorizer) CheckPermission(r *http.Request, id int64) (bool, error) {
+	resp, err := client.Platform.Auth.Enforce(r.Context(), &authproto.EnforceReq{
+		Sub: conv.FormatInt64(id),
+		Dom: config.Service.Name,
+		Obj: r.URL.Path,
+		Act: r.Method,
+	})
+	if err != nil {
+		return false, err
+	}
+
+	return resp.Allow, nil
+}
+
+func (a *BasicAuthorizer) TryAgainLater(c *gin.Context) {
+	a.Abort(c, http.StatusBadGateway, "try again later")
 }
 
 func (a *BasicAuthorizer) RequireLogIn(c *gin.Context) {
@@ -103,5 +113,5 @@ func (a *BasicAuthorizer) Abort(c *gin.Context, code int, msg string) {
 }
 
 func init() {
-	gob.Register(&UserAuth{})
+	AddMiddlewares(NewEntry(&Authorizer{}, 1))
 }

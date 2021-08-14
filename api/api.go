@@ -8,6 +8,7 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 
+	"github.com/blackdreamers/core/api/auth"
 	"github.com/blackdreamers/go-micro/v3/errors"
 )
 
@@ -99,6 +100,15 @@ func (a *API) Set(c *gin.Context, key interface{}, val interface{}) error {
 func (a *API) Delete(c *gin.Context, key interface{}) error {
 	session := sessions.Default(c)
 	session.Delete(key)
+	if err := session.Save(); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (a *API) SetToken(c *gin.Context, id int64, state bool) error {
+	session := sessions.Default(c)
+	session.Set(auth.TokenKey, &auth.User{ID: id, State: state})
 	if err := session.Save(); err != nil {
 		return err
 	}

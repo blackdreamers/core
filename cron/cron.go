@@ -9,10 +9,17 @@ import (
 var (
 	jobs []Job
 	c    *cron.Cron
+
+	Recover             = cron.Recover(newLog())
+	SkipIfStillRunning  = cron.SkipIfStillRunning(newLog())
+	DelayIfStillRunning = cron.DelayIfStillRunning(newLog())
 )
+
+type JobWrapper = cron.JobWrapper
 
 type Job interface {
 	Spec() string
+	Wrapper() *JobWrapper
 	Run()
 }
 
@@ -24,7 +31,11 @@ func Init() error {
 	c = cron.New(cron.WithSeconds(), cron.WithLocation(shanghai))
 
 	for _, job := range jobs {
-		_, err = c.AddJob(job.Spec(), job)
+		if job.Wrapper() != nil {
+			_, err = c.AddJob(job.Spec(), cron.NewChain(*(job.Wrapper())).Then(job))
+		} else {
+			_, err = c.AddJob(job.Spec(), job)
+		}
 		if err != nil {
 			return err
 		}
@@ -41,12 +52,4 @@ func AddJobs(jos ...Job) {
 
 func Stop() {
 	c.Stop()
-}
-
-func DelayIfStillRunJob(job cron.Job) cron.Job {
-	return cron.NewChain(cron.DelayIfStillRunning(newLog())).Then(job)
-}
-
-func SkipIfStillRunJob(job cron.Job) cron.Job {
-	return cron.NewChain(cron.SkipIfStillRunning(newLog())).Then(job)
 }

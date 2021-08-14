@@ -10,7 +10,8 @@ require (
 	github.com/blackdreamers/go-micro/plugins/logger/logrus/v3 v3.0.0-20210703052542-87049b6558d4
 	github.com/blackdreamers/go-micro/plugins/registry/etcd/v3 v3.0.0-20210703052542-87049b6558d4
 	github.com/blackdreamers/go-micro/plugins/server/grpc/v3 v3.0.0-20210703052542-87049b6558d4
-	github.com/blackdreamers/go-micro/v3 v3.5.2-0.20210721121153-f6058f417fc3
+	github.com/blackdreamers/go-micro/v3 v3.5.2-0.20210722153322-16a55ca316bb
+	github.com/blackdreamers/platform v0.0.0-20210706145821-a679fd58f750
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-contrib/pprof v1.3.0
 	github.com/gin-contrib/sessions v0.0.3
@@ -25,6 +26,6 @@ require (
 	github.com/sirupsen/logrus v1.8.1
 	github.com/ulule/limiter/v3 v3.8.0
 	golang.org/x/text v0.3.6
-	gorm.io/driver/mysql v1.0.3
-	gorm.io/gorm v1.21.7
+	gorm.io/driver/mysql v1.0.5
+	gorm.io/gorm v1.21.9
 )

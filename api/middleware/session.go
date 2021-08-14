@@ -53,6 +53,5 @@ func (s *Session) Init() ([]gin.HandlerFunc, error) {
 }
 
 func init() {
-	AddMiddlewares(&Session{})
-	AddMiddlewares(&Authorizer{})
+	AddMiddlewares(NewEntry(&Session{}, 0))
 }

@@ -59,7 +59,6 @@ func Init(opts ...micro.Option) {
 		micro.Client(cgrpc.NewClient()),
 		micro.Name(config.Service.SrvName),
 		micro.Version(config.Service.Version),
-		micro.Broker(nsq.NewBroker()),
 		micro.AfterStart(func() error {
 			client.Init(Client())
 			return nil
@@ -68,17 +67,18 @@ func Init(opts ...micro.Option) {
 			return cron.Init()
 		}),
 		micro.BeforeStop(func() error {
-			return broker.Broker().Disconnect()
-		}),
-		micro.BeforeStop(func() error {
 			cron.Stop()
 			return nil
 		}),
 	)
 
 	if config.Service.EnableBroker {
+		opts = append(opts, micro.Broker(nsq.NewBroker()))
 		opts = append(opts, micro.AfterStart(func() error {
 			return broker.Init(srv.srv.Options().Broker)
+		}))
+		opts = append(opts, micro.BeforeStop(func() error {
+			return broker.Broker().Disconnect()
 		}))
 	}
 
