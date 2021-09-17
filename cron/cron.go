@@ -1,14 +1,19 @@
 package cron
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/robfig/cron/v3"
+
+	"github.com/blackdreamers/core/lock"
 )
 
 var (
 	jobs []Job
 	c    *cron.Cron
+
+	EmptyOptions []Option
 
 	Recover             = cron.Recover(newLog())
 	SkipIfStillRunning  = cron.SkipIfStillRunning(newLog())
@@ -18,8 +23,9 @@ var (
 type JobWrapper = cron.JobWrapper
 
 type Job interface {
+	Name() string
 	Spec() string
-	Wrapper() *JobWrapper
+	Options() []Option
 	Run()
 }
 
@@ -31,11 +37,29 @@ func Init() error {
 	c = cron.New(cron.WithSeconds(), cron.WithLocation(shanghai))
 
 	for _, job := range jobs {
-		if job.Wrapper() != nil {
-			_, err = c.AddJob(job.Spec(), cron.NewChain(*(job.Wrapper())).Then(job))
-		} else {
-			_, err = c.AddJob(job.Spec(), job)
+		opt := &Options{}
+		for _, o := range job.Options() {
+			o(opt)
 		}
+
+		var cronJob cron.Job = job
+
+		if opt.SingleNode {
+			cronJob = cron.FuncJob(func() {
+				l := lock.NewLock(fmt.Sprintf("cron_single_node_%s", job.Name()))
+				if !l.Lock() {
+					return
+				}
+				job.Run()
+				l.UnLock()
+			})
+		}
+
+		if opt.Wrapper != nil {
+			cronJob = cron.NewChain(*(opt.Wrapper)).Then(cronJob)
+		}
+
+		_, err = c.AddJob(job.Spec(), cronJob)
 		if err != nil {
 			return err
 		}
