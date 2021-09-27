@@ -6,6 +6,7 @@ import (
 
 	"github.com/robfig/cron/v3"
 
+	"github.com/blackdreamers/core/config"
 	"github.com/blackdreamers/core/lock"
 )
 
@@ -46,7 +47,7 @@ func Init() error {
 
 		if opt.SingleNode {
 			cronJob = cron.FuncJob(func() {
-				l := lock.NewLock(fmt.Sprintf("cron_single_node_%s", job.Name()))
+				l := lock.NewLock(fmt.Sprintf("cron_single_node_%s_%s", config.Service.SrvName, job.Name()))
 				if !l.Lock() {
 					return
 				}
