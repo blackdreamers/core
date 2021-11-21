@@ -22,8 +22,12 @@ func (b *brokerConf) init() error {
 }
 
 func init() {
+	var addrs []string
+	if env.Lookup(constant.BrokerAddrs) {
+		addrs = env.GetStrings(constant.BrokerAddrs)
+	}
 	Broker = &brokerConf{
-		Addrs: env.GetStrings(constant.BrokerAddrs),
+		Addrs: addrs,
 	}
 	Configs(Broker)
 }
