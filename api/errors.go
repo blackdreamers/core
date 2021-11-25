@@ -15,5 +15,11 @@ func (e *Error) ErrMsg(lan string) string { return e.Err[lan] }
 func (e *Error) ErrCode() int { return e.Code }
 
 var (
-	StatusTooManyRequests = &Error{Code: http.StatusTooManyRequests, Err: map[string]string{"en": http.StatusText(http.StatusTooManyRequests), "zh": "请求太频繁，请稍后再试"}}
+	StatusTooManyRequests = &Error{
+		Code: http.StatusTooManyRequests,
+		Err: map[string]string{
+			"en": http.StatusText(http.StatusTooManyRequests),
+			"zh": "请求太频繁，请稍后再试",
+		},
+	}
 )

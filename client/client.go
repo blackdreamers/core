@@ -1,7 +1,7 @@
 package client
 
 import (
-	microcli "github.com/blackdreamers/go-micro/v3/client"
+	microcli "go-micro.dev/v4/client"
 )
 
 var (

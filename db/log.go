@@ -24,7 +24,7 @@ type dbLog struct {
 
 func newLog() *dbLog {
 	return &dbLog{
-		entry:                 logger.GetEntry(false),
+		entry:                 logger.GetEntry(),
 		SlowThreshold:         time.Duration(config.DB.LowThreshold) * time.Millisecond,
 		SourceField:           constant.SourceField,
 		SkipErrRecordNotFound: true,

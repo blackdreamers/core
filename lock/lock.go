@@ -7,8 +7,8 @@ import (
 
 	"github.com/blackdreamers/core/cache/redis"
 	"github.com/blackdreamers/core/constant"
+	log "github.com/blackdreamers/core/logger"
 	"github.com/blackdreamers/core/retry"
-	log "github.com/blackdreamers/go-micro/v3/logger"
 )
 
 type Lock struct {

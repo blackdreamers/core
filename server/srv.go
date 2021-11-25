@@ -1,9 +1,9 @@
 package server
 
 import (
-	"github.com/blackdreamers/go-micro/v3"
-	microcli "github.com/blackdreamers/go-micro/v3/client"
-	microsrv "github.com/blackdreamers/go-micro/v3/server"
+	"go-micro.dev/v4"
+	microcli "go-micro.dev/v4/client"
+	microsrv "go-micro.dev/v4/server"
 )
 
 var (

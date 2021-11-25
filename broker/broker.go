@@ -3,11 +3,12 @@ package broker
 import (
 	"encoding/json"
 
+	"go-micro.dev/v4/broker"
+
 	"github.com/blackdreamers/core/config"
 	"github.com/blackdreamers/core/constant"
+	log "github.com/blackdreamers/core/logger"
 	"github.com/blackdreamers/core/retry"
-	"github.com/blackdreamers/go-micro/v3/broker"
-	log "github.com/blackdreamers/go-micro/v3/logger"
 )
 
 var (

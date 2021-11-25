@@ -3,8 +3,9 @@ package errors
 import (
 	errs "errors"
 
+	"go-micro.dev/v4/errors"
+
 	"github.com/blackdreamers/core/config"
-	"github.com/blackdreamers/go-micro/v3/errors"
 )
 
 // New generates a custom error.

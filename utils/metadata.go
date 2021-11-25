@@ -4,8 +4,9 @@ import (
 	"context"
 	"strings"
 
+	"go-micro.dev/v4/metadata"
+
 	"github.com/blackdreamers/core/constant"
-	"github.com/blackdreamers/go-micro/v3/metadata"
 )
 
 func GetClientSrvName(ctx context.Context) (string, bool) {

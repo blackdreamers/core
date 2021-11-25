@@ -8,11 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/blackdreamers/core/api/auth"
-	"github.com/blackdreamers/core/api/auth/client"
 	"github.com/blackdreamers/core/config"
 	"github.com/blackdreamers/core/conv"
-	log "github.com/blackdreamers/go-micro/v3/logger"
-	authproto "github.com/blackdreamers/platform/proto/auth"
+	log "github.com/blackdreamers/core/logger"
 )
 
 const (
@@ -74,17 +72,17 @@ func (a *BasicAuthorizer) GetUser(c *gin.Context) (id int64, state bool, role st
 }
 
 func (a *BasicAuthorizer) CheckPermission(r *http.Request, id int64) (bool, error) {
-	resp, err := client.Platform.Auth.Enforce(r.Context(), &authproto.EnforceReq{
-		Sub: conv.FormatInt64(id),
-		Dom: config.Service.Name,
-		Obj: r.URL.Path,
-		Act: r.Method,
-	})
+	allow, err := auth.Enforce(
+		conv.FormatInt64(id),
+		config.Service.Name,
+		r.URL.Path,
+		r.Method,
+	)
 	if err != nil {
 		return false, err
 	}
 
-	return resp.Allow, nil
+	return allow, nil
 }
 
 func (a *BasicAuthorizer) TryAgainLater(c *gin.Context) {

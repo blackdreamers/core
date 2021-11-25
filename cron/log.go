@@ -4,7 +4,7 @@ import (
 	"sync"
 
 	"github.com/blackdreamers/core/constant"
-	"github.com/blackdreamers/go-micro/v3/logger"
+	"github.com/blackdreamers/core/logger"
 )
 
 var (

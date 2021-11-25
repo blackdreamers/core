@@ -4,21 +4,25 @@ import (
 	"context"
 	"time"
 
+	"github.com/asim/go-micro/plugins/broker/nsq/v4"
+	cgrpc "github.com/asim/go-micro/plugins/client/grpc/v4"
+	"github.com/asim/go-micro/plugins/registry/etcd/v4"
+	sgrpc "github.com/asim/go-micro/plugins/server/grpc/v4"
+	"go-micro.dev/v4"
+	"go-micro.dev/v4/registry"
+
+	"github.com/blackdreamers/core/api/auth"
 	"github.com/blackdreamers/core/broker"
 	"github.com/blackdreamers/core/cache/redis"
 	"github.com/blackdreamers/core/client"
 	"github.com/blackdreamers/core/config"
 	"github.com/blackdreamers/core/constant"
 	"github.com/blackdreamers/core/cron"
+	"github.com/blackdreamers/core/cron/jobs"
+	_ "github.com/blackdreamers/core/cron/jobs"
 	"github.com/blackdreamers/core/db"
 	"github.com/blackdreamers/core/logger"
 	"github.com/blackdreamers/core/utils"
-	"github.com/blackdreamers/go-micro/plugins/broker/nsq/v3"
-	cgrpc "github.com/blackdreamers/go-micro/plugins/client/grpc/v3"
-	"github.com/blackdreamers/go-micro/plugins/registry/etcd/v3"
-	sgrpc "github.com/blackdreamers/go-micro/plugins/server/grpc/v3"
-	"github.com/blackdreamers/go-micro/v3"
-	"github.com/blackdreamers/go-micro/v3/registry"
 )
 
 type Server interface {
@@ -117,6 +121,10 @@ func Init(opts ...micro.Option) {
 	}
 
 	if config.Service.Type == API {
+		cron.AddJobs(&jobs.CasbinPolicy{})
+		if err := auth.Init(); err != nil {
+			panic(err)
+		}
 		if err := api.init(opts...); err != nil {
 			panic(err)
 		}

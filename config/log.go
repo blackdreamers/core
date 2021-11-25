@@ -5,7 +5,6 @@ import (
 
 	"github.com/blackdreamers/core/constant"
 	"github.com/blackdreamers/core/env"
-	"github.com/blackdreamers/go-micro/v3/logger"
 )
 
 var (
@@ -24,7 +23,7 @@ func (l *logConf) init() error {
 
 func init() {
 	Log = &logConf{
-		Level: env.GetString(constant.LogLevel, logger.InfoLevel.String()),
+		Level: env.GetString(constant.LogLevel, "info"),
 	}
 	Configs(Log)
 }

@@ -8,14 +8,14 @@ import (
 
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
+	"go-micro.dev/v4"
 
 	coreapi "github.com/blackdreamers/core/api"
 	"github.com/blackdreamers/core/api/middleware"
 	"github.com/blackdreamers/core/config"
 	"github.com/blackdreamers/core/constant"
+	log "github.com/blackdreamers/core/logger"
 	"github.com/blackdreamers/core/utils"
-	"github.com/blackdreamers/go-micro/v3"
-	log "github.com/blackdreamers/go-micro/v3/logger"
 )
 
 var (
@@ -94,8 +94,8 @@ func (a *apiEntry) run() error {
 		Handler: a.r,
 	}
 
-	if log.V(log.InfoLevel, log.DefaultLogger) {
-		log.Infof("HTTP API Listening on %s", config.Service.Addr)
+	if log.V(log.InfoLevel) {
+		log.Logf(log.InfoLevel, "HTTP API Listening on %s", config.Service.Addr)
 	}
 
 	if err := a.s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
@@ -118,7 +118,7 @@ func logFormatter(param gin.LogFormatterParams) string {
 	}
 
 	var bodyStr string
-	if log.V(log.DebugLevel, log.DefaultLogger) && param.Request.Header.Get("Content-Type") == "application/json" {
+	if log.V(log.DebugLevel) && param.Request.Header.Get("Content-Type") == "application/json" {
 		body, _ := ioutil.ReadAll(param.Request.Body)
 		bodyJson := utils.JsonIndent(body)
 		if len(bodyJson) > 0 {

@@ -1,8 +1,9 @@
 package server
 
 import (
+	"go-micro.dev/v4"
+
 	"github.com/blackdreamers/core/config"
-	"github.com/blackdreamers/go-micro/v3"
 )
 
 const (

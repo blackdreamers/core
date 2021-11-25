@@ -6,74 +6,54 @@ import (
 	"runtime"
 	"strings"
 
-	log "github.com/sirupsen/logrus"
-
 	"github.com/blackdreamers/core/config"
 	"github.com/blackdreamers/core/constant/timef"
-	plslog "github.com/blackdreamers/go-micro/plugins/logger/logrus/v3"
-	"github.com/blackdreamers/go-micro/v3/logger"
+	"github.com/sirupsen/logrus"
 )
 
 var (
-	_logrus = &logrus{hooks: make(log.LevelHooks)}
+	log = &Logrus{hooks: make(logrus.LevelHooks)}
 )
 
-type logrus struct {
-	hooks              log.LevelHooks
-	enableCallerEntry  *log.Entry
-	disableCallerEntry *log.Entry
+type Logrus struct {
+	hooks logrus.LevelHooks
+	entry *logrus.Entry
 }
 
-func (l *logrus) init() error {
-	level, err := log.ParseLevel(config.Log.Level)
+func (l *Logrus) init() error {
+	level, err := logrus.ParseLevel(config.Log.Level)
 	if err != nil {
 		return err
 	}
 
-	enableCallerStd := newLogrus(level, true)
-	disableCallerStd := newLogrus(level, false)
+	std := logrus.New()
 
-	l.enableCallerEntry = log.NewEntry(enableCallerStd)
-	l.disableCallerEntry = log.NewEntry(disableCallerStd)
-
-	logger.DefaultLogger = plslog.NewLogger(plslog.WithLogger(GetEntry(true)))
-
-	return nil
-}
-
-func GetEntry(reportCaller bool) *log.Entry {
-	if reportCaller {
-		return _logrus.enableCallerEntry
-	}
-	return _logrus.disableCallerEntry
-}
-
-func newLogrus(level log.Level, reportCaller bool) *log.Logger {
-	std := log.New()
-
-	std.SetFormatter(&log.JSONFormatter{
-		CallerPrettyfier: caller(8),
-		TimestampFormat:  timef.YearMonthDayHourMinuteSecond,
+	std.SetFormatter(&logrus.JSONFormatter{
+		TimestampFormat: timef.YearMonthDayHourMinuteSecond,
 	})
 	if config.IsDevEnv() {
-		std.SetFormatter(&log.TextFormatter{
-			ForceColors:      true,
-			FullTimestamp:    true,
-			CallerPrettyfier: caller(9),
-			TimestampFormat:  timef.YearMonthDayHourMinuteSecond,
+		std.SetFormatter(&logrus.TextFormatter{
+			ForceColors:     true,
+			FullTimestamp:   true,
+			TimestampFormat: timef.YearMonthDayHourMinuteSecond,
 		})
 	}
 
 	std.SetOutput(os.Stdout)
 	std.SetLevel(level)
-	std.SetReportCaller(reportCaller)
-	std.ReplaceHooks(_logrus.hooks)
+	std.ReplaceHooks(log.hooks)
 
-	return std
+	l.entry = logrus.NewEntry(std)
+
+	return nil
 }
 
-func addHook(level log.Level, hks ...log.Hook) {
-	_logrus.hooks[level] = hks
+func GetEntry() *logrus.Entry {
+	return log.entry
+}
+
+func addHook(level logrus.Level, hks ...logrus.Hook) {
+	log.hooks[level] = hks
 }
 
 func caller(skip int) func(f *runtime.Frame) (string, string) {

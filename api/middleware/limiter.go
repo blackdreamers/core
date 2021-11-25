@@ -14,7 +14,7 @@ import (
 	"github.com/blackdreamers/core/api"
 	"github.com/blackdreamers/core/config"
 	"github.com/blackdreamers/core/constant"
-	log "github.com/blackdreamers/go-micro/v3/logger"
+	log "github.com/blackdreamers/core/logger"
 )
 
 type Limiter struct{}

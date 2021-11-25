@@ -38,7 +38,7 @@ func (l *Log) Init() ([]gin.HandlerFunc, error) {
 				dataLength = 0
 			}
 
-			entry := logger.GetEntry(false).WithFields(
+			entry := logger.GetEntry().WithFields(
 				logrus.Fields{
 					"hostname":    hostname,
 					"code":        statusCode,

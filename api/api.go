@@ -7,9 +7,9 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"go-micro.dev/v4/errors"
 
 	"github.com/blackdreamers/core/api/auth"
-	"github.com/blackdreamers/go-micro/v3/errors"
 )
 
 // Interface api interface

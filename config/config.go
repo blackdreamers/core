@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/asim/go-micro/plugins/config/source/etcd/v4"
+	"go-micro.dev/v4/config"
+	"go-micro.dev/v4/config/reader"
+	"go-micro.dev/v4/config/source"
+
 	"github.com/blackdreamers/core/constant"
 	"github.com/blackdreamers/core/env"
-	"github.com/blackdreamers/go-micro/plugins/config/source/etcd/v3"
-	"github.com/blackdreamers/go-micro/v3/config"
-	"github.com/blackdreamers/go-micro/v3/config/reader"
-	"github.com/blackdreamers/go-micro/v3/config/source"
 )
 
 var (
