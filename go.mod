@@ -111,7 +111,7 @@ require (
 	gopkg.in/tomb.v1 v1.0.0-20141024135613-dd632973f1e7 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	gorm.io/driver/postgres v1.1.2 // indirect
-	gorm.io/driver/sqlserver v1.0.9 // indirect
+	gorm.io/driver/postgres v1.2.2 // indirect
+	gorm.io/driver/sqlserver v1.2.1 // indirect
 	gorm.io/plugin/dbresolver v1.1.0 // indirect
 )
