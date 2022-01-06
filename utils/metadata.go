@@ -9,7 +9,7 @@ import (
 	"github.com/blackdreamers/core/constant"
 )
 
-func GetClientSrvName(ctx context.Context) (string, bool) {
+func GetClientName(ctx context.Context) (string, bool) {
 	md, ok := metadata.FromContext(ctx)
 	if ok {
 		return md.Get("Micro-From-Service")
@@ -17,8 +17,8 @@ func GetClientSrvName(ctx context.Context) (string, bool) {
 	return "", false
 }
 
-func GetClientName(ctx context.Context) (string, bool) {
-	val, ok := GetClientSrvName(ctx)
+func GetClientSrvName(ctx context.Context) (string, bool) {
+	val, ok := GetClientName(ctx)
 	if ok {
 		idx := strings.Index(val, constant.Delimiter)
 		if idx != len(val) {
