@@ -29,7 +29,7 @@ type App struct {
 
 type AppEx struct {
 	Srv    []string  `json:"srv"`
-	Config AppConfig `json:"app"`
+	Config AppConfig `json:"config"`
 }
 
 type AppConfig struct {
