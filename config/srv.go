@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 )
 
 var (
@@ -24,7 +24,7 @@ type service struct {
 }
 
 func (s *service) init() error {
-	s.SrvName = s.Type + constant.Delimiter + s.Name
+	s.SrvName = s.Type + consts.Delimiter + s.Name
 	s.Version = s.Get("version").String("latest")
 	s.DBName = s.Get("dbname").String(s.Name)
 	s.Addr = s.Get("addr").String(":8080")

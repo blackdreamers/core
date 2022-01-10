@@ -11,7 +11,7 @@ import (
 	"gorm.io/gorm/utils"
 
 	"github.com/blackdreamers/core/config"
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 	"github.com/blackdreamers/core/logger"
 )
 
@@ -26,7 +26,7 @@ func newLog() *dbLog {
 	return &dbLog{
 		entry:                 logger.GetEntry(),
 		SlowThreshold:         time.Duration(config.DB.LowThreshold) * time.Millisecond,
-		SourceField:           constant.SourceField,
+		SourceField:           consts.SourceField,
 		SkipErrRecordNotFound: true,
 	}
 }
@@ -56,7 +56,7 @@ func (l *dbLog) Trace(ctx context.Context, begin time.Time, fc func() (string, i
 		fields[l.SourceField] = utils.FileWithLineNum()
 	}
 	if err != nil && !(errors.Is(err, gorm.ErrRecordNotFound) && l.SkipErrRecordNotFound) {
-		fields[constant.ErrKey] = err
+		fields[consts.ErrKey] = err
 		level = logrus.ErrorLevel
 	}
 

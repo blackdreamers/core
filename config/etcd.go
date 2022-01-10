@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 	"github.com/blackdreamers/core/env"
 )
 
@@ -25,23 +25,23 @@ func (e *etcdConf) init() error {
 }
 
 func init() {
-	auth, err := env.GetBool(constant.EtcdAuth, false)
+	auth, err := env.GetBool(consts.EtcdAuth, false)
 	if err != nil {
 		panic(err)
 	}
-	TLS, err := env.GetBool(constant.EtcdTLS, false)
+	TLS, err := env.GetBool(consts.EtcdTLS, false)
 	if err != nil {
 		panic(err)
 	}
 	Etcd = &etcdConf{
 		TLS:         TLS,
 		Auth:        auth,
-		User:        env.GetString(constant.EtcdUser, ""),
-		Password:    env.GetString(constant.EtcdPassword, ""),
-		Addrs:       env.GetStrings(constant.EtcdAddrs),
-		CaPath:      env.GetString(constant.EtcdCaPath, ""),
-		CertPath:    env.GetString(constant.EtcdCertPath, ""),
-		CertKeyPath: env.GetString(constant.EtcdCertKeyPath, ""),
+		User:        env.GetString(consts.EtcdUser, ""),
+		Password:    env.GetString(consts.EtcdPassword, ""),
+		Addrs:       env.GetStrings(consts.EtcdAddrs),
+		CaPath:      env.GetString(consts.EtcdCaPath, ""),
+		CertPath:    env.GetString(consts.EtcdCertPath, ""),
+		CertKeyPath: env.GetString(consts.EtcdCertKeyPath, ""),
 	}
 	Configs(Etcd)
 }

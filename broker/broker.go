@@ -6,7 +6,7 @@ import (
 	"go-micro.dev/v4/broker"
 
 	"github.com/blackdreamers/core/config"
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 	log "github.com/blackdreamers/core/logger"
 	"github.com/blackdreamers/core/retry"
 )
@@ -112,7 +112,7 @@ func Publish(topic string, header Header, body Body, opts ...broker.PublishOptio
 		}),
 	)
 	if err != nil {
-		log.Fields("header", header, "body", string(msg.Body), constant.ErrKey, err).Log(log.ErrorLevel, "broker push")
+		log.Fields("header", header, "body", string(msg.Body), consts.ErrKey, err).Log(log.ErrorLevel, "broker push")
 		return err
 	}
 

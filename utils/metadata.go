@@ -6,7 +6,7 @@ import (
 
 	"go-micro.dev/v4/metadata"
 
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 )
 
 func GetClientName(ctx context.Context) (string, bool) {
@@ -20,7 +20,7 @@ func GetClientName(ctx context.Context) (string, bool) {
 func GetClientSrvName(ctx context.Context) (string, bool) {
 	val, ok := GetClientName(ctx)
 	if ok {
-		idx := strings.Index(val, constant.Delimiter)
+		idx := strings.Index(val, consts.Delimiter)
 		if idx != len(val) {
 			return val[idx+1:], true
 		}

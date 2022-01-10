@@ -3,7 +3,7 @@ package config
 import (
 	"strings"
 
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 	"github.com/blackdreamers/core/env"
 )
 
@@ -17,13 +17,13 @@ type logConf struct {
 
 func (l *logConf) init() error {
 	// etcd service配置的日志等级权重高于env中配置的
-	l.Level = Service.Get(strings.ToLower(constant.LogLevel)).String(l.Level)
+	l.Level = Service.Get(strings.ToLower(consts.LogLevel)).String(l.Level)
 	return nil
 }
 
 func init() {
 	Log = &logConf{
-		Level: env.GetString(constant.LogLevel, "info"),
+		Level: env.GetString(consts.LogLevel, "info"),
 	}
 	Configs(Log)
 }

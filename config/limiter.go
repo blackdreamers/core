@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 )
 
 var (
@@ -19,11 +19,11 @@ type limiterConf struct {
 }
 
 func (l *limiterConf) init() error {
-	if err := Get(constant.LimiterConfKey).Scan(l); err != nil {
+	if err := Get(consts.LimiterConfKey).Scan(l); err != nil {
 		return err
 	}
 	if l.Store == "" {
-		l.Store = constant.MemoryStore
+		l.Store = consts.MemoryStore
 	}
 	if l.Limit == "" {
 		l.Limit = "10-S"

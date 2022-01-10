@@ -9,7 +9,7 @@ import (
 	"go-micro.dev/v4/config/reader"
 	"go-micro.dev/v4/config/source"
 
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 	"github.com/blackdreamers/core/env"
 )
 
@@ -25,8 +25,8 @@ type conf interface {
 }
 
 func init() {
-	Env = env.GetString(constant.Env, constant.Prod)
-	Registry = env.GetString(constant.Registry, "")
+	Env = env.GetString(consts.Env, consts.Prod)
+	Registry = env.GetString(consts.Registry, "")
 }
 
 func Init() error {
@@ -53,15 +53,15 @@ func Init() error {
 }
 
 func IsDevEnv() bool {
-	return Env == constant.Dev
+	return Env == consts.Dev
 }
 
 func IsTestEnv() bool {
-	return Env == constant.Test
+	return Env == consts.Test
 }
 
 func IsProdEnv() bool {
-	return Env == constant.Prod || Env == constant.Release
+	return Env == consts.Prod || Env == consts.Release
 }
 
 func Configs(cs ...conf) {

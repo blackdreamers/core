@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/blackdreamers/core/config"
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 )
 
 const (
@@ -23,11 +23,11 @@ func (s *Session) Init() ([]gin.HandlerFunc, error) {
 	var sessionStore redis.Store
 
 	switch config.Session.Store {
-	case constant.CookieStore:
+	case consts.CookieStore:
 		sessionStore = cookie.NewStore([]byte(config.Session.Secret))
-	case constant.MemoryStore:
+	case consts.MemoryStore:
 		sessionStore = memstore.NewStore([]byte(config.Session.Secret))
-	case constant.RedisStore:
+	case consts.RedisStore:
 		var err error
 		sessionStore, err = redis.NewStoreWithDB(
 			512,

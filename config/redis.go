@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 )
 
 var (
@@ -16,10 +16,10 @@ type redisConf struct {
 }
 
 func (r *redisConf) init() error {
-	if err := Get(constant.RedisConfKey).Scan(r); err != nil {
+	if err := Get(consts.RedisConfKey).Scan(r); err != nil {
 		return err
 	}
-	r.Addrs = Get(constant.RedisConfKey, "addrs").StringSlice([]string{"localhost:6379"})
+	r.Addrs = Get(consts.RedisConfKey, "addrs").StringSlice([]string{"localhost:6379"})
 	r.KeyPrefix = Service.Name
 	return nil
 }

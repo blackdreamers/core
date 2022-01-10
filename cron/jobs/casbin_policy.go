@@ -2,7 +2,7 @@ package jobs
 
 import (
 	"github.com/blackdreamers/core/api/auth"
-	consts "github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 	"github.com/blackdreamers/core/cron"
 	log "github.com/blackdreamers/core/logger"
 )

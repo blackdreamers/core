@@ -1,6 +1,6 @@
 package config
 
-import "github.com/blackdreamers/core/constant"
+import "github.com/blackdreamers/core/consts"
 
 var (
 	DB = &dbConf{}
@@ -15,7 +15,7 @@ type dbConf struct {
 }
 
 func (db *dbConf) init() error {
-	if err := Get(constant.DBConfKey).Scan(db); err != nil {
+	if err := Get(consts.DBConfKey).Scan(db); err != nil {
 		return err
 	}
 	return nil

@@ -13,7 +13,7 @@ import (
 	coreapi "github.com/blackdreamers/core/api"
 	"github.com/blackdreamers/core/api/middleware"
 	"github.com/blackdreamers/core/config"
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 	log "github.com/blackdreamers/core/logger"
 	"github.com/blackdreamers/core/utils"
 )
@@ -46,12 +46,12 @@ func (a *apiEntry) init(opts ...micro.Option) error {
 	gin.ForceConsoleColor()
 	env := config.Env
 	switch env {
-	case constant.Dev:
+	case consts.Dev:
 		env = gin.DebugMode
-	case constant.Test:
+	case consts.Test:
 		env = gin.TestMode
-	case constant.Prod,
-		constant.Release:
+	case consts.Prod,
+		consts.Release:
 		env = gin.ReleaseMode
 	}
 	gin.SetMode(env)

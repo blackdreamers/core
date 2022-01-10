@@ -3,7 +3,7 @@ package cron
 import (
 	"sync"
 
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 	"github.com/blackdreamers/core/logger"
 )
 
@@ -27,6 +27,6 @@ func (c cronLog) Info(msg string, keysAndValues ...interface{}) {
 }
 
 func (c cronLog) Error(err error, msg string, keysAndValues ...interface{}) {
-	keysAndValues = append(keysAndValues, constant.ErrKey, err)
+	keysAndValues = append(keysAndValues, consts.ErrKey, err)
 	logger.Fields(keysAndValues...).Log(logger.ErrorLevel, msg)
 }

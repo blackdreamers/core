@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/blackdreamers/core/config"
-	"github.com/blackdreamers/core/constant/timef"
+	"github.com/blackdreamers/core/consts/timef"
 	"github.com/sirupsen/logrus"
 )
 

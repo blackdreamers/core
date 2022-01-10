@@ -16,7 +16,7 @@ import (
 	"github.com/blackdreamers/core/cache/redis"
 	"github.com/blackdreamers/core/client"
 	"github.com/blackdreamers/core/config"
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 	"github.com/blackdreamers/core/cron"
 	"github.com/blackdreamers/core/cron/jobs"
 	_ "github.com/blackdreamers/core/cron/jobs"
@@ -86,7 +86,7 @@ func Init(opts ...micro.Option) {
 		}))
 	}
 
-	if config.Registry == "" || config.Registry == constant.Etcd {
+	if config.Registry == "" || config.Registry == consts.Etcd {
 		if config.Etcd.Auth {
 			regOpts = append(regOpts, etcd.Auth(config.Etcd.User, config.Etcd.Password))
 		}

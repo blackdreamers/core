@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/blackdreamers/core/cache/redis"
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 	log "github.com/blackdreamers/core/logger"
 	"github.com/blackdreamers/core/retry"
 )
@@ -47,7 +47,7 @@ func (l *Lock) Lock() bool {
 
 	result, err := redis.SetNX(l.ctx, l.key, "true", l.expireTime)
 	if err != nil {
-		log.Fields(constant.ErrKey, err, "key", l.key).Log(log.ErrorLevel, "get lock err")
+		log.Fields(consts.ErrKey, err, "key", l.key).Log(log.ErrorLevel, "get lock err")
 	}
 
 	return result
@@ -65,14 +65,14 @@ func (l *Lock) UnLock() {
 		},
 		retry.OnRetry(func(n uint, err error) {
 			log.Fields(
-				constant.ErrKey, err,
+				consts.ErrKey, err,
 				"key", l.key,
 				"num", n,
 			).Log(log.WarnLevel, "retry")
 		}),
 	)
 	if err != nil {
-		log.Fields(constant.ErrKey, err, "key", l.key).Log(log.ErrorLevel, "unlock err")
+		log.Fields(consts.ErrKey, err, "key", l.key).Log(log.ErrorLevel, "unlock err")
 	}
 }
 

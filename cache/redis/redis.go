@@ -2,12 +2,13 @@ package redis
 
 import (
 	"context"
+	"errors"
 	"time"
 
 	"github.com/go-redis/redis/v8"
 
 	"github.com/blackdreamers/core/config"
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 )
 
 const (
@@ -70,6 +71,14 @@ func Init() error {
 	return nil
 }
 
+func IsNil(err error) bool {
+	return errors.Is(err, Nil)
+}
+
+func IsNotNil(err error) bool {
+	return !errors.Is(err, Nil)
+}
+
 func Client() redis.Cmdable {
 	return r.client
 }
@@ -86,7 +95,7 @@ func KeyPrefix() string {
 }
 
 func WithPrefix(k string) string {
-	return r.keyPrefix + constant.Delimiter + k
+	return r.keyPrefix + consts.Delimiter + k
 }
 
 func WithPrefixes(keys []string) []string {

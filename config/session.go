@@ -1,7 +1,7 @@
 package config
 
 import (
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 )
 
 var (
@@ -17,11 +17,11 @@ type sessionConf struct {
 }
 
 func (s *sessionConf) init() error {
-	if err := Get(constant.SessionConfKey).Scan(s); err != nil {
+	if err := Get(consts.SessionConfKey).Scan(s); err != nil {
 		return err
 	}
 	if s.Store == "" {
-		s.Store = constant.MemoryStore
+		s.Store = consts.MemoryStore
 	}
 	if s.Secret == "" {
 		s.Secret = "daydream"

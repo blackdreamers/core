@@ -13,7 +13,7 @@ import (
 
 	"github.com/blackdreamers/core/api"
 	"github.com/blackdreamers/core/config"
-	"github.com/blackdreamers/core/constant"
+	"github.com/blackdreamers/core/consts"
 	log "github.com/blackdreamers/core/logger"
 )
 
@@ -27,9 +27,9 @@ func (l *Limiter) Init() ([]gin.HandlerFunc, error) {
 	}
 
 	switch config.Limiter.Store {
-	case constant.MemoryStore:
+	case consts.MemoryStore:
 		limiterStore = memory.NewStoreWithOptions(storeOptions)
-	case constant.RedisStore:
+	case consts.RedisStore:
 		var err error
 		client := libredis.NewClient(&libredis.Options{
 			DB:           config.Redis.DB,
@@ -58,7 +58,7 @@ func (l *Limiter) Init() ([]gin.HandlerFunc, error) {
 		mgin.NewMiddleware(
 			limiter.New(limiterStore, rate),
 			mgin.WithErrorHandler(func(c *gin.Context, err error) {
-				log.Field(constant.ErrKey, err).Log(log.ErrorLevel)
+				log.Field(consts.ErrKey, err).Log(log.ErrorLevel)
 				c.Next()
 			}),
 			mgin.WithLimitReachedHandler(func(c *gin.Context) {
