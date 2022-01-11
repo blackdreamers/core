@@ -49,7 +49,9 @@ func GetApps() (apps Apps, err error) {
 	if appsJson, err = redis.Client().Get(context.Background(), appCacheKey).Result(); err != nil && redis.IsNotNil(err) {
 		return nil, err
 	}
-
+	if redis.IsNil(err) {
+		return apps, nil
+	}
 	if err = json.Unmarshal([]byte(appsJson), &apps); err != nil {
 		return nil, err
 	}
