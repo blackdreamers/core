@@ -46,7 +46,7 @@ type AppConfig struct {
 
 func GetApps() (apps Apps, err error) {
 	var appsJson string
-	if appsJson, err = redis.Client().Get(context.Background(), appCacheKey).Result(); redis.IsNotNil(err) {
+	if appsJson, err = redis.Client().Get(context.Background(), appCacheKey).Result(); err != nil && redis.IsNotNil(err) {
 		return nil, err
 	}
 
