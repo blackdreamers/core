@@ -24,15 +24,15 @@ type App struct {
 	Name  string `json:"name"`
 	Desc  string `json:"desc"`
 	State bool   `json:"state"`
-	AppEx
+	Ex
 }
 
-type AppEx struct {
-	Srv    []string  `json:"srv"`
-	Config AppConfig `json:"config"`
+type Ex struct {
+	Srv    []string `json:"srv"`
+	Config Config   `json:"config"`
 }
 
-type AppConfig struct {
+type Config struct {
 	WxMini map[string]struct {
 		AppID     string `json:"app_id"`
 		AppSecret string `json:"app_secret"`
@@ -44,9 +44,9 @@ type AppConfig struct {
 	} `json:"storage"`
 }
 
-func GetApps() (apps Apps, err error) {
+func GetApps(ctx context.Context) (apps Apps, err error) {
 	var appsJson string
-	if appsJson, err = redis.Client().Get(context.Background(), appCacheKey).Result(); err != nil && redis.IsNotNil(err) {
+	if appsJson, err = redis.Client().Get(ctx, appCacheKey).Result(); err != nil && redis.IsNotNil(err) {
 		return nil, err
 	}
 	if redis.IsNil(err) {
@@ -59,8 +59,8 @@ func GetApps() (apps Apps, err error) {
 	return apps, nil
 }
 
-func GetByName(name string) (*App, error) {
-	apps, err := GetApps()
+func GetByName(ctx context.Context, name string) (*App, error) {
+	apps, err := GetApps(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -73,8 +73,8 @@ func GetByName(name string) (*App, error) {
 	return nil, errors.New(errs.AppNotFound)
 }
 
-func GetBySrv(srv string) (*App, error) {
-	apps, err := GetApps()
+func GetBySrv(ctx context.Context, srv string) (*App, error) {
+	apps, err := GetApps(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -87,8 +87,8 @@ func GetBySrv(srv string) (*App, error) {
 	return nil, errors.New(errs.AppNotFound)
 }
 
-func GetConfigByName(name string) (*AppConfig, error) {
-	apps, err := GetApps()
+func GetConfigByName(ctx context.Context, name string) (*Config, error) {
+	apps, err := GetApps(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -101,8 +101,8 @@ func GetConfigByName(name string) (*AppConfig, error) {
 	return nil, errors.New(errs.AppNotFound)
 }
 
-func GetConfigBySrv(srv string) (conf *AppConfig, err error) {
-	apps, err := GetApps()
+func GetConfigBySrv(ctx context.Context, srv string) (conf *Config, err error) {
+	apps, err := GetApps(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -121,36 +121,36 @@ func GetByClient(ctx context.Context) (app *App, err error) {
 		return nil, errors.New(errs.ParseClientNameErr)
 	}
 
-	if app, err = GetBySrv(cliName); err != nil {
+	if app, err = GetBySrv(ctx, cliName); err != nil {
 		return nil, err
 	}
 
 	return app, nil
 }
 
-func GetConfigByClient(ctx context.Context) (conf *AppConfig, err error) {
+func GetConfigByClient(ctx context.Context) (conf *Config, err error) {
 	cliName, ok := utils.GetClientSrvName(ctx)
 	if !ok {
 		return nil, errors.New(errs.ParseClientNameErr)
 	}
 
-	if conf, err = GetConfigBySrv(cliName); err != nil {
+	if conf, err = GetConfigBySrv(ctx, cliName); err != nil {
 		return nil, err
 	}
 
 	return conf, nil
 }
 
-func SetApps(apps Apps) error {
+func SetApps(ctx context.Context, apps Apps) error {
 	if appsJson, err := json.Marshal(&apps); err != nil {
 		return err
 	} else {
-		return redis.Client().Set(context.Background(), appCacheKey, string(appsJson), -1).Err()
+		return redis.Client().Set(ctx, appCacheKey, string(appsJson), -1).Err()
 	}
 }
 
-func SetApp(app *App) error {
-	apps, err := GetApps()
+func SetApp(ctx context.Context, app *App) error {
+	apps, err := GetApps(ctx)
 	if err != nil {
 		return err
 	}
@@ -168,11 +168,11 @@ func SetApp(app *App) error {
 		apps = append(apps, *app)
 	}
 
-	return SetApps(apps)
+	return SetApps(ctx, apps)
 }
 
-func RemoveApp(app *App) error {
-	apps, err := GetApps()
+func RemoveApp(ctx context.Context, app *App) error {
+	apps, err := GetApps(ctx)
 	if err != nil {
 		return err
 	}
@@ -184,5 +184,5 @@ func RemoveApp(app *App) error {
 		}
 	}
 
-	return SetApps(apps)
+	return SetApps(ctx, apps)
 }
