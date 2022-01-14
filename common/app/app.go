@@ -32,16 +32,29 @@ type Ex struct {
 	Config Config   `json:"config"`
 }
 
-type Config struct {
-	WxMini map[string]struct {
-		AppID     string `json:"app_id"`
-		AppSecret string `json:"app_secret"`
-	} `json:"wx_mini"`
+type Config map[string]interface{}
 
-	Storage map[string]struct {
-		AccessKey string `json:"access_key"`
-		SecretKey string `json:"secret_key"`
-	} `json:"storage"`
+func (c *Config) Parse(target interface{}, keys ...string) error {
+	var err error
+	var data []byte
+
+	if len(keys) == 0 {
+		data, err = json.Marshal(c)
+	} else {
+		conf := *c
+		for _, key := range keys {
+			if _, ok := conf[key]; !ok {
+				return errors.New(errs.ConfigNotFound)
+			}
+			conf = conf[key].(map[string]interface{})
+		}
+		data, err = json.Marshal(conf)
+	}
+
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(data, &target)
 }
 
 func GetApps(ctx context.Context) (apps Apps, err error) {
