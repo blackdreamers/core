@@ -9,6 +9,7 @@ import (
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 
 	"github.com/blackdreamers/core/config"
+	"github.com/blackdreamers/core/db"
 )
 
 var (
@@ -23,12 +24,17 @@ func Init() error {
 		return err
 	}
 
-	a, err := gormadapter.NewAdapter("mysql", fmt.Sprintf("%v:%v@tcp(%v:%v)/",
-		config.DB.User,
-		config.DB.Password,
-		config.DB.Host,
-		config.DB.Port,
-	))
+	var a *gormadapter.Adapter
+	if config.Service.EnableDB && config.Service.Private {
+		a, err = gormadapter.NewAdapterByDB(db.DB)
+	} else {
+		a, err = gormadapter.NewAdapter("mysql", fmt.Sprintf("%v:%v@tcp(%v:%v)/",
+			config.DB.User,
+			config.DB.Password,
+			config.DB.Host,
+			config.DB.Port,
+		))
+	}
 	if err != nil {
 		return err
 	}

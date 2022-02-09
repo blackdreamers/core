@@ -1,6 +1,7 @@
 package server
 
 import (
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -98,7 +99,7 @@ func (a *apiEntry) run() error {
 		log.Logf(log.InfoLevel, "HTTP API Listening on %s", config.Service.Addr)
 	}
 
-	if err := a.s.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+	if err := a.s.ListenAndServe(); err != nil && !errors.Is(err, http.ErrServerClosed) {
 		return err
 	}
 	return nil

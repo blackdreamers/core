@@ -23,16 +23,23 @@ func Type(t string) micro.Option {
 	}
 }
 
-// EnableDB Whether the server use db, default true
-func EnableDB(b bool) micro.Option {
+// DisableDB Server not using db
+func DisableDB() micro.Option {
 	return func(o *micro.Options) {
-		config.Service.EnableDB = b
+		config.Service.EnableDB = false
 	}
 }
 
-// EnableBroker Whether the server use broker, default true
-func EnableBroker(b bool) micro.Option {
+// DisableBroker Server not using broker
+func DisableBroker() micro.Option {
 	return func(o *micro.Options) {
-		config.Service.EnableBroker = b
+		config.Service.EnableBroker = false
+	}
+}
+
+// Private Server not using public components, must enable db
+func Private() micro.Option {
+	return func(o *micro.Options) {
+		config.Service.Private = true
 	}
 }

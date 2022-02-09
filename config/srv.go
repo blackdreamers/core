@@ -18,6 +18,7 @@ type service struct {
 	Version      string
 	EnableDB     bool
 	EnableBroker bool
+	Private      bool
 	DBName       string
 	Addr         string
 	AllowOrigins []string
