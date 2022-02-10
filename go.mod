@@ -24,6 +24,7 @@ require (
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.8.1
+	github.com/sony/sonyflake v1.0.0
 	github.com/thoas/go-funk v0.9.1
 	github.com/ulule/limiter/v3 v3.8.0
 	go-micro.dev/v4 v4.4.0
