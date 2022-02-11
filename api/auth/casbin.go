@@ -31,7 +31,7 @@ func Init() error {
 
 	var a *gormadapter.Adapter
 	if config.Service.EnableDB && config.Service.Private {
-		a, err = gormadapter.NewAdapterByDBUseTableName(db.DB, "", ruleTableName)
+		a, err = gormadapter.NewAdapterByDBUseTableName(db.DB, ruleDBName, ruleTableName)
 	} else {
 		a, err = gormadapter.NewAdapter(
 			"mysql",
