@@ -12,8 +12,13 @@ import (
 	"github.com/blackdreamers/core/db"
 )
 
+const (
+	ruleDBName    = "auth"
+	ruleTableName = "rule"
+)
+
 var (
-	//go:embed rbac.conf
+	//go:embed model.conf
 	conf string
 	e    *casbin.Enforcer
 )
@@ -26,14 +31,19 @@ func Init() error {
 
 	var a *gormadapter.Adapter
 	if config.Service.EnableDB && config.Service.Private {
-		a, err = gormadapter.NewAdapterByDB(db.DB)
+		a, err = gormadapter.NewAdapterByDBUseTableName(db.DB, "", ruleTableName)
 	} else {
-		a, err = gormadapter.NewAdapter("mysql", fmt.Sprintf("%v:%v@tcp(%v:%v)/",
-			config.DB.User,
-			config.DB.Password,
-			config.DB.Host,
-			config.DB.Port,
-		))
+		a, err = gormadapter.NewAdapter(
+			"mysql",
+			fmt.Sprintf("%v:%v@tcp(%v:%v)/",
+				config.DB.User,
+				config.DB.Password,
+				config.DB.Host,
+				config.DB.Port,
+			),
+			ruleDBName,
+			ruleTableName,
+		)
 	}
 	if err != nil {
 		return err
