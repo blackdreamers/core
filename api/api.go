@@ -7,9 +7,12 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/thoas/go-funk"
 	"go-micro.dev/v4/errors"
 
 	"github.com/blackdreamers/core/api/auth"
+	"github.com/blackdreamers/core/config"
+	"github.com/blackdreamers/core/conv"
 )
 
 // Interface api interface
@@ -116,10 +119,24 @@ func (a *API) Delete(c *gin.Context, key interface{}) error {
 }
 
 func (a *API) SetToken(c *gin.Context, id int64, state bool) error {
-	session := sessions.Default(c)
-	session.Set(auth.TokenKey, &auth.User{ID: id, State: state})
-	if err := session.Save(); err != nil {
-		return err
+	return a.Set(c, auth.TokenKey, &auth.User{ID: id, State: state})
+}
+
+func (a *API) GetToken(c *gin.Context) *auth.User {
+	user := a.Get(c, auth.TokenKey)
+	if u, ok := user.(*auth.User); ok {
+		return u
 	}
-	return nil
+	return &auth.User{}
+}
+
+func (a *API) GetRoles(c *gin.Context) []string {
+	return auth.Enforcer().GetRolesForUserInDomain(
+		conv.FormatInt64(a.GetToken(c).ID),
+		config.Service.Name,
+	)
+}
+
+func (a *API) HasRole(c *gin.Context, role string) bool {
+	return funk.ContainsString(a.GetRoles(c), role)
 }
