@@ -14,6 +14,8 @@ type dbConf struct {
 	LowThreshold int    `json:"low_threshold"`
 	MaxOpenConns int    `json:"max_open_conns"`
 	MaxIdleConns int    `json:"max_idle_conns"`
+	MaxLifeTime  int    `json:"max_life_time"`
+	MaxIdleTime  int    `json:"max_idle_time"`
 }
 
 func (db *dbConf) init() error {

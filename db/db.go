@@ -2,6 +2,7 @@ package db
 
 import (
 	"fmt"
+	"time"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -62,6 +63,12 @@ func Init() error {
 	}
 	sqldb.SetMaxOpenConns(config.DB.MaxOpenConns)
 	sqldb.SetMaxIdleConns(config.DB.MaxIdleConns)
+	if config.DB.MaxLifeTime != 0 {
+		sqldb.SetConnMaxLifetime(time.Duration(config.DB.MaxLifeTime) * time.Second)
+	}
+	if config.DB.MaxIdleTime != 0 {
+		sqldb.SetConnMaxIdleTime(time.Duration(config.DB.MaxIdleTime) * time.Second)
+	}
 
 	for _, repository := range repositories {
 		if err = DB.AutoMigrate(repository); err != nil {
