@@ -28,6 +28,10 @@ func AddRepositories(dbRepositories ...Repository) {
 	repositories = append(repositories, dbRepositories...)
 }
 
+func Repositories() []Repository {
+	return repositories
+}
+
 func Init() error {
 	var err error
 
