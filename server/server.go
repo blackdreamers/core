@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"github.com/blackdreamers/core/api/websocket"
 	"time"
 
 	"github.com/asim/go-micro/plugins/broker/nsq/v4"
@@ -109,6 +110,7 @@ func Init(opts ...micro.Option) {
 				return api.run()
 			}),
 			micro.BeforeStop(func() error {
+				_ = websocket.WS.Close()
 				ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 				defer cancel()
 				return api.s.Shutdown(ctx)

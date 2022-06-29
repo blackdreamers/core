@@ -35,6 +35,6 @@ func (w *Websocket) Upgrade(c *gin.Context) {
 	keys := make(map[string]interface{})
 	keys[auth.TokenKey] = w.Session.GetToken(c)
 	if err := WS.HandleRequestWithKeys(c.Writer, c.Request, keys); err != nil {
-		log.Fields(consts.ErrKey, err).Logf(log.ErrorLevel, "WS request")
+		log.Fields(consts.ErrKey, err).Logf(log.ErrorLevel, "ws request")
 	}
 }
