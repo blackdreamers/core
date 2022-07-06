@@ -12,6 +12,7 @@ require (
 	github.com/avast/retry-go v2.7.0+incompatible
 	github.com/casbin/casbin/v2 v2.47.3
 	github.com/casbin/gorm-adapter/v3 v3.7.2
+	github.com/elastic/go-elasticsearch/v7 v7.8.0
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-contrib/pprof v1.3.0
 	github.com/gin-contrib/sessions v0.0.5
@@ -31,6 +32,7 @@ require (
 	github.com/ulule/limiter/v3 v3.8.0
 	go-micro.dev/v4 v4.7.0
 	golang.org/x/text v0.3.7
+	gopkg.in/go-extras/elogrus.v7 v7.2.0
 	gorm.io/driver/mysql v1.3.4
 	gorm.io/gorm v1.23.6
 )
@@ -64,6 +66,7 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
 	github.com/gomodule/redigo v2.0.0+incompatible // indirect
+	github.com/google/go-cmp v0.5.7 // indirect
 	github.com/google/uuid v1.3.0 // indirect
 	github.com/gorilla/context v1.1.1 // indirect
 	github.com/gorilla/securecookie v1.1.1 // indirect

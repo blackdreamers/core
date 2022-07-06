@@ -6,9 +6,13 @@ import (
 	"runtime"
 	"strings"
 
+	"github.com/elastic/go-elasticsearch/v7"
+	"github.com/sirupsen/logrus"
+	"gopkg.in/go-extras/elogrus.v7"
+
 	"github.com/blackdreamers/core/config"
 	"github.com/blackdreamers/core/consts/timef"
-	"github.com/sirupsen/logrus"
+	"github.com/blackdreamers/core/utils"
 )
 
 var (
@@ -28,15 +32,38 @@ func (l *Logrus) init() error {
 
 	std := logrus.New()
 
-	std.SetFormatter(&logrus.JSONFormatter{
-		TimestampFormat: timef.YearMonthDayHourMinuteSecond,
-	})
 	if config.IsDevEnv() {
 		std.SetFormatter(&logrus.TextFormatter{
 			ForceColors:     true,
 			FullTimestamp:   true,
 			TimestampFormat: timef.YearMonthDayHourMinuteSecond,
 		})
+	} else {
+		std.SetFormatter(&logrus.JSONFormatter{
+			TimestampFormat: timef.YearMonthDayHourMinuteSecond,
+		})
+
+		client, err := elasticsearch.NewClient(
+			elasticsearch.Config{
+				Addresses: []string{config.ES.Host},
+				Username:  config.ES.User,
+				Password:  config.ES.Password,
+			},
+		)
+		if err != nil {
+			return err
+		}
+
+		ip, err := utils.GetLocalIpV4()
+		if err != nil {
+			return err
+		}
+
+		hook, err := elogrus.NewAsyncElasticHook(client, ip, level, config.Log.Index)
+		if err != nil {
+			return err
+		}
+		AddHook(hook)
 	}
 
 	std.SetOutput(os.Stdout)
@@ -52,11 +79,13 @@ func GetEntry() *logrus.Entry {
 	return log.entry
 }
 
-func addHook(level logrus.Level, hks ...logrus.Hook) {
-	log.hooks[level] = hks
+func AddHook(hook logrus.Hook) {
+	for _, level := range hook.Levels() {
+		log.hooks[level] = append(log.hooks[level], hook)
+	}
 }
 
-func caller(skip int) func(f *runtime.Frame) (string, string) {
+func Caller(skip int) func(f *runtime.Frame) (string, string) {
 	return func(f *runtime.Frame) (string, string) {
 		_, file, line, ok := runtime.Caller(skip)
 		fileline := "unknown"

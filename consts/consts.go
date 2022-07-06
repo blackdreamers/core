@@ -14,11 +14,13 @@ const (
 )
 
 const (
+	LogKey         = "log"
 	DBConfKey      = "database"
 	RedisConfKey   = "redis"
 	LimiterConfKey = "limiter"
 	SessionConfKey = "session"
 	BrokerConfKey  = "broker"
+	EsKey          = "es"
 )
 
 const (

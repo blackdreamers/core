@@ -12,10 +12,14 @@ var (
 )
 
 type logConf struct {
-	Level string
+	Level string `json:"-"`
+	Index string `json:"index"`
 }
 
 func (l *logConf) init() error {
+	if err := Get(consts.LogKey).Scan(l); err != nil {
+		return err
+	}
 	// etcd service配置的日志等级权重高于env中配置的
 	l.Level = Service.Get(strings.ToLower(consts.LogLevel)).String(l.Level)
 	return nil
