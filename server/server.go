@@ -2,17 +2,18 @@ package server
 
 import (
 	"context"
-	"github.com/blackdreamers/core/api/websocket"
 	"time"
 
-	"github.com/asim/go-micro/plugins/broker/nsq/v4"
-	cgrpc "github.com/asim/go-micro/plugins/client/grpc/v4"
-	"github.com/asim/go-micro/plugins/registry/etcd/v4"
-	sgrpc "github.com/asim/go-micro/plugins/server/grpc/v4"
+	"github.com/go-micro/plugins/v4/broker/nsq"
+	cgrpc "github.com/go-micro/plugins/v4/client/grpc"
+	"github.com/go-micro/plugins/v4/registry/etcd"
+	sgrpc "github.com/go-micro/plugins/v4/server/grpc"
+	"github.com/go-micro/plugins/v4/wrapper/monitoring/prometheus"
 	"go-micro.dev/v4"
 	"go-micro.dev/v4/registry"
 
 	"github.com/blackdreamers/core/api/auth"
+	"github.com/blackdreamers/core/api/websocket"
 	"github.com/blackdreamers/core/broker"
 	"github.com/blackdreamers/core/cache/redis"
 	"github.com/blackdreamers/core/client"
@@ -20,7 +21,6 @@ import (
 	"github.com/blackdreamers/core/consts"
 	"github.com/blackdreamers/core/cron"
 	"github.com/blackdreamers/core/cron/jobs"
-	_ "github.com/blackdreamers/core/cron/jobs"
 	"github.com/blackdreamers/core/db"
 	"github.com/blackdreamers/core/logger"
 	"github.com/blackdreamers/core/utils"
@@ -76,6 +76,14 @@ func Init(opts ...micro.Option) {
 			return nil
 		}),
 	)
+
+	if !config.IsDevEnv() {
+		opts = append(opts, micro.WrapHandler(
+			prometheus.NewHandlerWrapper(
+				prometheus.ServiceName(config.Service.Name),
+			),
+		))
+	}
 
 	if config.Service.EnableBroker {
 		opts = append(opts, micro.Broker(nsq.NewBroker()))

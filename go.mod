@@ -3,12 +3,6 @@ module github.com/blackdreamers/core
 go 1.18
 
 require (
-	github.com/asim/go-micro/plugins/broker/nsq/v4 v4.0.0-20211118090700-90b3e4af0b58
-	github.com/asim/go-micro/plugins/client/grpc/v4 v4.0.0-20211111140334-799b8d6a6559
-	github.com/asim/go-micro/plugins/config/source/etcd/v4 v4.0.0-20211111140334-799b8d6a6559
-	github.com/asim/go-micro/plugins/logger/logrus/v4 v4.0.0-20211118090700-90b3e4af0b58
-	github.com/asim/go-micro/plugins/registry/etcd/v4 v4.0.0-20211118090700-90b3e4af0b58
-	github.com/asim/go-micro/plugins/server/grpc/v4 v4.0.0-20211118090700-90b3e4af0b58
 	github.com/avast/retry-go v2.7.0+incompatible
 	github.com/casbin/casbin/v2 v2.47.3
 	github.com/casbin/gorm-adapter/v3 v3.7.2
@@ -17,6 +11,13 @@ require (
 	github.com/gin-contrib/pprof v1.3.0
 	github.com/gin-contrib/sessions v0.0.5
 	github.com/gin-gonic/gin v1.8.1
+	github.com/go-micro/plugins/v4/broker/nsq v1.0.0
+	github.com/go-micro/plugins/v4/client/grpc v1.0.0
+	github.com/go-micro/plugins/v4/config/source/etcd v1.0.0
+	github.com/go-micro/plugins/v4/logger/logrus v1.0.0
+	github.com/go-micro/plugins/v4/registry/etcd v1.0.0
+	github.com/go-micro/plugins/v4/server/grpc v1.0.1
+	github.com/go-micro/plugins/v4/wrapper/monitoring/prometheus v1.0.0
 	github.com/go-playground/locales v0.14.0
 	github.com/go-playground/universal-translator v0.18.0
 	github.com/go-playground/validator/v10 v10.10.0
@@ -42,6 +43,7 @@ require (
 	github.com/Microsoft/go-winio v0.5.0 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20210428141323-04723f9f07d7 // indirect
 	github.com/acomagu/bufpipe v1.0.3 // indirect
+	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bitly/go-simplejson v0.5.0 // indirect
 	github.com/boj/redistore v0.0.0-20180917114910-cd5dcc76aeff // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
@@ -89,6 +91,7 @@ require (
 	github.com/kevinburke/ssh_config v0.0.0-20201106050909-4977a11b4351 // indirect
 	github.com/leodido/go-urn v1.2.1 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
+	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/miekg/dns v1.1.43 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/hashstructure v1.1.0 // indirect
@@ -99,6 +102,10 @@ require (
 	github.com/oxtoacart/bpool v0.0.0-20190530202638-03653db5a59c // indirect
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/prometheus/client_golang v1.11.0 // indirect
+	github.com/prometheus/client_model v0.2.0 // indirect
+	github.com/prometheus/common v0.26.0 // indirect
+	github.com/prometheus/procfs v0.6.0 // indirect
 	github.com/quasoft/memstore v0.0.0-20191010062613-2bce066d2b0b // indirect
 	github.com/remyoudompheng/bigfft v0.0.0-20200410134404-eec4a21b6bb0 // indirect
 	github.com/russross/blackfriday/v2 v2.0.1 // indirect
@@ -107,9 +114,9 @@ require (
 	github.com/ugorji/go/codec v1.2.7 // indirect
 	github.com/urfave/cli/v2 v2.3.0 // indirect
 	github.com/xanzy/ssh-agent v0.3.0 // indirect
-	go.etcd.io/etcd/api/v3 v3.5.0 // indirect
-	go.etcd.io/etcd/client/pkg/v3 v3.5.0 // indirect
-	go.etcd.io/etcd/client/v3 v3.5.0 // indirect
+	go.etcd.io/etcd/api/v3 v3.5.2 // indirect
+	go.etcd.io/etcd/client/pkg/v3 v3.5.2 // indirect
+	go.etcd.io/etcd/client/v3 v3.5.2 // indirect
 	go.uber.org/atomic v1.7.0 // indirect
 	go.uber.org/multierr v1.6.0 // indirect
 	go.uber.org/zap v1.17.0 // indirect

@@ -1,7 +1,7 @@
 package logger
 
 import (
-	pluslog "github.com/asim/go-micro/plugins/logger/logrus/v4"
+	pluslog "github.com/go-micro/plugins/v4/logger/logrus"
 	"github.com/sirupsen/logrus"
 	"go-micro.dev/v4/logger"
 

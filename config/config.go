@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/asim/go-micro/plugins/config/source/etcd/v4"
+	"github.com/go-micro/plugins/v4/config/source/etcd"
 	"go-micro.dev/v4/config"
 	"go-micro.dev/v4/config/reader"
 	"go-micro.dev/v4/config/source"
