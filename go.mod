@@ -24,7 +24,7 @@ require (
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/jinzhu/copier v0.3.5
 	github.com/longhaoteng/melody v0.0.0-20211130023625-13ad6a22c142
-	github.com/longhaoteng/sheriff v0.0.0-20220809081205-7ff94cd8cd4c
+	github.com/longhaoteng/sheriff v0.0.0-20220826073150-95be2875c533
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/sirupsen/logrus v1.8.1
