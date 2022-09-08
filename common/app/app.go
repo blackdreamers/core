@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 
-	"github.com/thoas/go-funk"
+	"github.com/samber/lo"
 
 	"github.com/blackdreamers/core/cache/redis"
 	"github.com/blackdreamers/core/db"
@@ -93,7 +93,7 @@ func GetBySrv(ctx context.Context, srv string) (*App, error) {
 	}
 
 	for _, app := range apps {
-		if funk.ContainsString(app.Srv, srv) {
+		if lo.Contains(app.Srv, srv) {
 			return &app, nil
 		}
 	}
@@ -121,7 +121,7 @@ func GetConfigBySrv(ctx context.Context, srv string) (conf *Config, err error) {
 	}
 
 	for _, app := range apps {
-		if funk.ContainsString(app.Srv, srv) {
+		if lo.Contains(app.Srv, srv) {
 			return &app.Config, nil
 		}
 	}

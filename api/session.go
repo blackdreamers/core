@@ -3,13 +3,13 @@ package api
 import (
 	"reflect"
 
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-gonic/gin"
-	"github.com/thoas/go-funk"
+	"github.com/samber/lo"
 
 	"github.com/blackdreamers/core/api/auth"
 	"github.com/blackdreamers/core/config"
 	"github.com/blackdreamers/core/conv"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-gonic/gin"
 )
 
 type Session struct{}
@@ -60,5 +60,5 @@ func (s *Session) GetRoles(c *gin.Context) []string {
 }
 
 func (s *Session) HasRole(c *gin.Context, role string) bool {
-	return funk.ContainsString(s.GetRoles(c), role)
+	return lo.Contains(s.GetRoles(c), role)
 }
