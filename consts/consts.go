@@ -11,6 +11,7 @@ const (
 	Delimiter   = "."
 	SourceField = "source"
 	ErrKey      = "error"
+	SrvNameKey  = "Srv-Name"
 )
 
 const (

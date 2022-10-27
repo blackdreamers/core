@@ -10,13 +10,15 @@ import (
 	sgrpc "github.com/go-micro/plugins/v4/server/grpc"
 	"github.com/go-micro/plugins/v4/wrapper/monitoring/prometheus"
 	"go-micro.dev/v4"
+	microcli "go-micro.dev/v4/client"
+	"go-micro.dev/v4/metadata"
 	"go-micro.dev/v4/registry"
 
 	"github.com/blackdreamers/core/api/auth"
 	"github.com/blackdreamers/core/api/websocket"
 	"github.com/blackdreamers/core/broker"
 	"github.com/blackdreamers/core/cache/redis"
-	"github.com/blackdreamers/core/client"
+	corecli "github.com/blackdreamers/core/client"
 	"github.com/blackdreamers/core/config"
 	"github.com/blackdreamers/core/consts"
 	"github.com/blackdreamers/core/cron"
@@ -64,8 +66,15 @@ func Init(opts ...micro.Option) {
 		micro.Client(cgrpc.NewClient()),
 		micro.Name(config.Service.SrvName),
 		micro.Version(config.Service.Version),
+		micro.WrapCall(func(cf microcli.CallFunc) microcli.CallFunc {
+			return func(ctx context.Context, node *registry.Node, req microcli.Request, rsp interface{},
+				opts microcli.CallOptions) error {
+				err := cf(metadata.Set(ctx, consts.SrvNameKey, config.Service.SrvName), node, req, rsp, opts)
+				return err
+			}
+		}),
 		micro.AfterStart(func() error {
-			client.Init(Client())
+			corecli.Init(Client())
 			return nil
 		}),
 		micro.AfterStart(func() error {

@@ -12,7 +12,7 @@ import (
 func GetClientName(ctx context.Context) (string, bool) {
 	md, ok := metadata.FromContext(ctx)
 	if ok {
-		return md.Get("Micro-From-Service")
+		return md.Get(consts.SrvNameKey)
 	}
 	return "", false
 }
