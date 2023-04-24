@@ -1,10 +1,7 @@
 package logger
 
 import (
-	"fmt"
 	"os"
-	"runtime"
-	"strings"
 
 	"github.com/elastic/go-elasticsearch/v7"
 	"github.com/sirupsen/logrus"
@@ -82,27 +79,5 @@ func GetEntry() *logrus.Entry {
 func AddHook(hook logrus.Hook) {
 	for _, level := range hook.Levels() {
 		log.hooks[level] = append(log.hooks[level], hook)
-	}
-}
-
-func Caller(skip int) func(f *runtime.Frame) (string, string) {
-	return func(f *runtime.Frame) (string, string) {
-		_, file, line, ok := runtime.Caller(skip)
-		fileline := "unknown"
-		if ok {
-			filePath := strings.ReplaceAll(file, fmt.Sprintf("%s/pkg/mod/", os.Getenv("GOPATH")), "")
-			// 去除路径中版本号
-			versionIndex := strings.Index(filePath, "@")
-			if versionIndex != -1 {
-				subPath := filePath[versionIndex:]
-				version := subPath[:strings.Index(subPath, "/")]
-				filePath = strings.ReplaceAll(filePath, version, "")
-			}
-			fileline = fmt.Sprintf("%v:%v", filePath, line)
-			if config.IsDevEnv() {
-				fileline += "\t"
-			}
-		}
-		return "", fileline
 	}
 }
